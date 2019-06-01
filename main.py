@@ -3,6 +3,7 @@ import pygame
 import pyglet
 from engine import Engine
 from controls import get_inputs
+from gameobjects import Road, Neutral, Capitalist, Socialist
 
 _image_library = {}
 
@@ -37,20 +38,35 @@ def __main__():
             if event.type == pygame.QUIT:
                 running = False
 
-        screen.fill((0, 0, 0))
+        screen.fill((255, 255, 255))
 
         pressed = pygame.key.get_pressed()
         p1_inputs, p2_inputs = get_inputs(pressed)
 
         engine.tick(p1_inputs, p2_inputs)
 
-        screen.blit(get_image('bike.png'), engine.player1.position)
+        # draw cells
+        for _, cell in engine.cells.items():
+            print(type(cell))
+            if type(cell) is Road:
+                screen.blit(get_image('road.png'), cell.position)
+            elif type(cell) is Neutral:
+                screen.blit(get_image('neutral.png'), cell.position)
+            elif type(cell) is Capitalist:
+                screen.blit(get_image('capitalist.png'), cell.position)
+            elif type(cell) is Socialist:
+                screen.blit(get_image('socialist.png'), cell.position)
+            else:
+                print(type(cell))
 
-        screen.blit(get_image('car.png'), engine.player2.position)
+        # draw players
+        screen.blit(get_image('car.png'), engine.capitalist.position)
+        screen.blit(get_image('bike.png'), engine.socialist.position)
 
         # updates game screen
         pygame.display.flip()
         clock.tick()
+
 
     pygame.quit()
     return True

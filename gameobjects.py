@@ -1,79 +1,48 @@
 """ Our game objects """
-from controls import Inputs
 from enum import Enum
-
-class Headings(Enum):
-    North = 0
-    East = 1
-    South = 2
-    West = 3
+from pygame import Rect
+import math
 
 
 class Owner(Enum):
-    Player1 = 0
-    Player2 = 1
+    Capitalist = 0
+    Socialist = 1
     Neutral = 2
 
 
 class Cell():
-    def __init__(self):
-        return
-
-    def is_navigable(self):
-        return True
+    def __init__(self, grid, is_navigable=True):
+        """
+        grid: tuple of grid location (x, y)
+        """
+        self.is_navigable = is_navigable
+        self.position = (grid[0] * 60, grid[1] * 60)
+        self.rect = Rect(self.position,
+                        (self.position[0] + 59, self.position[1] + 59))
 
     def tick(self):
         return
 
 
 class Road(Cell):
+    def __init__(self, grid):
+        super().__init__(grid, is_navigable=True)
 
-    def is_navigable(self):
-        return True
 
-
-class Changeable(Cell):
-    def __init__(self):
+class Neutral(Cell):
+    def __init__(self, grid):
         self.owner = Owner.Neutral
+        super().__init__(grid, is_navigable=True)
 
 
-class Player():
-    """ represents a player """
+class Capitalist(Cell):
+    def __init__(self, grid):
+        self.owner = Owner.Capitalist
+        super().__init__(grid, is_navigable=False)
 
-    def __init__(self, position):
-        """ 
-        position: list [x,y]
-        """
-        self.position = position
-        self._heading = Headings.North
-        self._velocity = [0, 0]
-        self._size = (15, 15) 
 
-    def _damp(self):
-        """ Decelerates x and y axis movement """
-        self._velocity[0] = int(0.8 * self._velocity[0])
-        self._velocity[1] = int(0.8 * self._velocity[1])
+class Socialist(Cell):
+    def __init__(self, grid):
+        self.owner = Owner.Socialist
+        super().__init__(grid, is_navigable=False)
 
-    def _move(self):
-        self.position[0] += self._velocity[0]
-        self.position[1] += self._velocity[1]
-
-    def tick(self, inputs):
-        self.handle_inputs(inputs)
-        self._move()
-
-    def handle_inputs(self, inputs):
-        if inputs == [] or inputs == [Inputs.ACTION]:
-            self._damp()
-            return
-
-        if Inputs.UP in inputs:
-            self._velocity[1] -= 1
-        if Inputs.RIGHT in inputs:
-            self._velocity[0] += 1
-        if Inputs.DOWN in inputs:
-            self._velocity[1] += 1
-        if Inputs.LEFT in inputs:
-            self._velocity[0] -= 1
-
-    
