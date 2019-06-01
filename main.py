@@ -42,6 +42,8 @@ def __main__():
 
         screen.blit(get_image('bike.png'), engine.player1.position)
 
+        screen.blit(get_image('car.png'), engine.player2.position)
+
         # updates game screen
         pygame.display.flip()
         clock.tick()
