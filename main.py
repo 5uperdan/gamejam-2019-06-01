@@ -22,6 +22,8 @@ def __main__():
         pygame.display.flip()
         clock.tick()
 
+        
+
     pygame.quit()
     return True
 
