@@ -47,7 +47,6 @@ def __main__():
 
         # draw cells
         for _, cell in engine.cells.items():
-            print(type(cell))
             if type(cell) is Road:
                 screen.blit(get_image('road.png'), cell.position)
             elif type(cell) is Neutral:
@@ -57,8 +56,8 @@ def __main__():
             elif type(cell) is Socialist:
                 screen.blit(get_image('socialist.png'), cell.position)
             else:
-                print(type(cell))
-
+                continue
+                
         # draw players
         screen.blit(get_image('car.png'), engine.capitalist.position)
         screen.blit(get_image('bike.png'), engine.socialist.position)

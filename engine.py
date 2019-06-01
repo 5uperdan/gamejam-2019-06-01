@@ -1,4 +1,4 @@
-from gameobjects import Road, Neutral, Capitalist, Socialist
+from gameobjects import Cell, Road, Neutral, Capitalist, Socialist
 from players import Player
 import random
 
@@ -19,6 +19,7 @@ class Engine():
         self.cells[(5, 5)] = Capitalist((5, 5))
         self.cells[(7, 7)] = Neutral((7, 7))
 
+        Engine.build_boundary(self.cells)
         # initialise 2 players
         #player1_start_cell = random.choice(x for cells in self.cells.values)
 
@@ -34,6 +35,20 @@ class Engine():
 
         self.socialist = Player([30, 30])
 
+    @classmethod
+    def build_boundary(self, cells):
+        """ builds the game boundary """
+        # left and right boundary columns
+        for x in (-1, 10):
+            for y in range(-1, 11):
+                cells[(x, y)] = Cell((x, y), is_navigable=False)
+
+        # top and bottom boundary columns
+        for x in range(10):
+            for y in (-1, 10):
+                cells[(x, y)] = Cell((x, y), is_navigable=False)
+    
+    
     def tick(self, p1_inputs, p2_inputs):
         """ Progresses the game one tick forward """
 

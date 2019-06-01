@@ -15,10 +15,12 @@ class Cell():
         """
         grid: tuple of grid location (x, y)
         """
+        self.grid = grid
         self.is_navigable = is_navigable
         self.position = (grid[0] * 60, grid[1] * 60)
         self.rect = Rect(self.position,
                         (self.position[0] + 59, self.position[1] + 59))
+
 
     def tick(self):
         return
