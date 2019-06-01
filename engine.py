@@ -30,6 +30,8 @@ class Engine():
     def tick(self, p1_inputs, p2_inputs):
         """ Progresses the game one tick forward """
 
+        # player only needs to know about the cell they are in and adjacent ones
+        # to check for collision.
         self.player1.tick(p1_inputs)
         self.player2.tick(p2_inputs)
 

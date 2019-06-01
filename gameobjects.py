@@ -47,6 +47,7 @@ class Player():
         self.position = position
         self._heading = Headings.North
         self._velocity = [0, 0]
+        self._size = (15, 15) 
 
     def _damp(self):
         """ Decelerates x and y axis movement """
@@ -62,7 +63,6 @@ class Player():
         self._move()
 
     def handle_inputs(self, inputs):
-        print(inputs)
         if inputs == [] or inputs == [Inputs.ACTION]:
             self._damp()
             return
