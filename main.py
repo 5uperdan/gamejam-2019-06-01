@@ -2,6 +2,7 @@ import os
 import pygame
 import pyglet
 from engine import Engine
+from controls import get_inputs
 
 _image_library = {}
 
@@ -38,7 +39,10 @@ def __main__():
 
         screen.fill((0, 0, 0))
 
-        engine.tick([], [])
+        pressed = pygame.key.get_pressed()
+        p1_inputs, p2_inputs = get_inputs(pressed)
+
+        engine.tick(p1_inputs, p2_inputs)
 
         screen.blit(get_image('bike.png'), engine.player1.position)
 

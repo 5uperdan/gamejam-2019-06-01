@@ -62,7 +62,18 @@ class Player():
         self._move()
 
     def handle_inputs(self, inputs):
+        print(inputs)
+        if inputs == [] or inputs == [Inputs.ACTION]:
+            self._damp()
+            return
+
         if Inputs.UP in inputs:
-            self._velocity[1] -= 10
+            self._velocity[1] -= 1
+        if Inputs.RIGHT in inputs:
+            self._velocity[0] += 1
+        if Inputs.DOWN in inputs:
+            self._velocity[1] += 1
+        if Inputs.LEFT in inputs:
+            self._velocity[0] -= 1
 
     
