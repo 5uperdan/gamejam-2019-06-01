@@ -69,7 +69,13 @@ def draw_progress_bar(screen, cell):
         (cell.position, (60 * cell.get_progress(), 5)))
 
 
+def splash_screen():
+    return
+
+
 def __main__():
+    splash_screen()
+    
     pre_init(44100, -16, 1, 1024)
     pygame.init()
     pygame.font.init()
@@ -107,7 +113,7 @@ def __main__():
             if event.type == pygame.QUIT:
                 running = False
     
-        screen.fill((255, 255, 255))
+        screen.fill((0, 0, 0))
 
         pressed = pygame.key.get_pressed()
         p1_inputs, p2_inputs = get_inputs(pressed)
