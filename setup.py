@@ -6,8 +6,8 @@ import sys
 #os.environ['TCL_LIBRARY'] = "C:\\Users\\danny\\Envs\\gamejam-2019-06-01\\tcl\\tcl8.6"
 #os.environ['TK_LIBRARY'] = "C:\\Users\\danny\\Envs\\gamejam-2019-06-01\\tcl\\tk8.6"
 
-os.environ['TCL_LIBRARY'] = sys.path[0] + "\\win-buildrequirements\\tcl8.6"
-os.environ['TK_LIBRARY'] = sys.path[0] + "\\win-buildrequirements\\tk8.6"
+os.environ['TCL_LIBRARY'] = sys.path[0] + "\\.win-buildrequirements\\tcl8.6"
+os.environ['TK_LIBRARY'] = sys.path[0] + "\\.win-buildrequirements\\tk8.6"
 
 setup(name="KNOCKING DOWN CAPITALISM",
       version="0.1",
