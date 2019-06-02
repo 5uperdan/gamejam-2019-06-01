@@ -2,6 +2,8 @@ from enum import Enum
 import pygame
 from controls import Inputs
 import math
+from game_cell_handler import capitalise_cell, socialise_cell
+from random import choice
 
 
 class Headings(Enum):
@@ -14,11 +16,14 @@ class Headings(Enum):
 class Player():
     """ represents a player """
 
-    def __init__(self, position, max_speed):
+    def __init__(self, position, headings, max_speed):
         """
         position: list [x,y]
+        headings: list [HeadingEnums, ...]
         """
+        self.score = 0
         self.position = position
+        self.headings = headings
         self._velocity = [0, 0]
         self.MAX_SPEED = max_speed
 
@@ -34,6 +39,23 @@ class Player():
         """ returns the tuple grid location of the centre of the player """
         return (math.floor((self.position[0] + 7) / 60),
                 math.floor((self.position[1] + 7) / 60))
+
+    @classmethod
+    def get_target_grid_refs(self, player_grid_ref, headings):
+        """ returns a list of grid refs of the adjacent cells in the
+            direction of the headings """
+        adjacent_grid_refs = []
+
+        if Headings.North in headings:
+            adjacent_grid_refs.append((player_grid_ref[0], player_grid_ref[1] - 1))
+        if Headings.East in headings:
+            adjacent_grid_refs.append((player_grid_ref[0] + 1, player_grid_ref[1]))
+        if Headings.South in headings:
+            adjacent_grid_refs.append((player_grid_ref[0], player_grid_ref[1] + 1))
+        if Headings.West in headings:
+            adjacent_grid_refs.append((player_grid_ref[0] - 1, player_grid_ref[1]))
+
+        return adjacent_grid_refs
 
     @classmethod
     def get_surrounding_unnavigable_cells(self, player_grid_ref, cells):
@@ -61,20 +83,6 @@ class Player():
         self.position[0] += self._velocity[0]
         self.position[1] += self._velocity[1]
 
-    def tick(self, inputs, cells):
-        player_grid_ref = self.get_grid_ref()
-        self.handle_inputs(inputs)
-        self._move()
-
-        sur_unav_cells = Player.get_surrounding_unnavigable_cells(
-            player_grid_ref, cells)
-
-        for cell in sur_unav_cells:
-            if self.rect.colliderect(cell.rect):
-                self.position = [500, 500]
-                self._velocity = [0, 0]
-
-
     def _accelerate(self, acceleration):
         """ Increases velocity """
         self._velocity[0] += acceleration[0]
@@ -92,44 +100,95 @@ class Player():
         if self._velocity[1] < - self.MAX_SPEED:
             self._velocity[1] = - self.MAX_SPEED
 
-
-    def handle_inputs(self, inputs):
+    def _handle_movement_inputs(self, inputs):
         damp_x = True
         damp_y = True
 
+        self.headings = []
+
         if Inputs.UP in inputs:
             self._accelerate((0, -1))
+            self.headings.append(Headings.North)
             damp_y = False
 
         if Inputs.RIGHT in inputs:
             self._accelerate((1, 0))
+            self.headings.append(Headings.East)
             damp_x = False
 
         if Inputs.DOWN in inputs:
             self._accelerate((0, 1))
+            self.headings.append(Headings.South)
             damp_y = False
 
         if Inputs.LEFT in inputs:
             self._accelerate((-1, 0))
+            self.headings.append(Headings.West)
             damp_x = False
 
         self._damp(damp_x, damp_y)
+
+    def _handle_action_input(self, player_grid_ref, opponent_grid_ref, cells):
+        target_grid_refs = Player.get_target_grid_refs(
+            player_grid_ref,
+            self.headings)
+        if opponent_grid_ref in target_grid_refs:
+            target_grid_refs.remove(opponent_grid_ref)
+
+        self.action(cells, target_grid_refs=target_grid_refs)
+
+    def _handle_environment_collisions(self, player_grid_ref, cells):
+        sur_unav_cells = Player.get_surrounding_unnavigable_cells(
+            player_grid_ref, cells)
+
+        for cell in sur_unav_cells:
+            if self.rect.colliderect(cell.rect):
+                self.position = [500, 500]
+                self._velocity = [0, 0]
+
+    def tick(self, inputs, cells, opponent_grid_ref):
+        player_grid_ref = self.get_grid_ref()
+
+        self._handle_movement_inputs(inputs)
+
+        if Inputs.ACTION in inputs:
+            self.handle_action_input(player_grid_ref, opponent_grid_ref, cells)
+
+        self._move()
+
+        self._handle_environment_collisions()
 
 
 class Capitalist(Player):
 
     def __init__(self, position):
-        self._heading = Headings.North
         self._size = (30, 30)
-        super().__init__(position, max_speed=10)
+        super().__init__(
+            position,
+            headings=[Headings.North],
+            max_speed=7)
 
-    #def action(self, cells):
+    def action(self, cells, target_grid_refs):
+        for grid_ref in target_grid_refs:
+            capitalise_cell(cells, grid_ref)
 
+    def killed_socialist(self):
+        self.score += 100
 
 
 class Socialist(Player):
 
     def __init__(self, position):
-        self._heading = Headings.South
         self._size = (15, 15)
-        super().__init__(position, max_speed=7)
+        super().__init__(
+            position,
+            headings=[Headings.South],
+            max_speed=4)
+
+    def action(self, cells, target_grid_refs):
+        for grid_ref in target_grid_refs:
+            socialise_cell(cells, grid_ref)
+
+    def killed(self):
+        """ return to one of the hospitals """
+        self.position = choice((10, 10), (50, 50), (80, 80))

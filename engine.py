@@ -53,8 +53,19 @@ class Engine():
     def tick(self, p1_inputs, p2_inputs):
         """ Progresses the game one tick forward """
 
-        self.capitalist.tick(p1_inputs, self.cells)
-        self.socialist.tick(p2_inputs, self.cells)
+        self.capitalist.tick(
+            inputs=p1_inputs,
+            cells=self.cells,
+            opponent_grid_ref=self.socialist.get_grid_ref())
+
+        self.socialist.tick(
+            inputs=p2_inputs,
+            cells=self.cells,
+            opponent_grid_ref=self.capitalist.get_grid_ref())
+
+        if self.capitalist.rect.colliderect(self.socialist.rect):
+            self.capitalist.killed_socialist()
+            self.socialist.killed()
 
         for reference, cell in self.cells.items():
             cell.tick()

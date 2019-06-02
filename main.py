@@ -75,6 +75,7 @@ def __main__():
                 draw_progress_bar(screen, cell)
             elif type(cell) is Socialist_Cell:
                 screen.blit(get_image('test/socialist.png'), cell.position)
+                draw_progress_bar(screen, cell)
             else:
                 continue
 
