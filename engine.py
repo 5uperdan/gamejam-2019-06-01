@@ -1,5 +1,5 @@
-from gameobjects import (Cell, Road_Cell, Neutral_Cell,
-                         Capitalist_Cell, Socialist_Cell)
+from gameobjects import (Cell, Road_Cell, Rock_Cell, Capturable_Cell,
+                         Capitalist_Cell, Socialist_Cell, Neutral_Cell)
 from players import Capitalist, Socialist
 import random
 
@@ -74,3 +74,8 @@ def load_level(cells):
                  (0, 8), (1, 8), (4, 8), (5, 8), (6, 8), (7, 8), (8, 8),
                  (1, 9), (2, 9), (3, 9), (4, 9), (8, 9), (9, 9)]:
         cells[grid] = Road_Cell(grid)
+
+        for x in range(10):
+            for y in range(10):
+                if (x, y) not in cells:
+                    cells[(x, y)] = Neutral_Cell((x, y))

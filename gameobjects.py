@@ -21,7 +21,7 @@ class Cell():
         self.position = (grid_ref[0] * 60, grid_ref[1] * 60)
         self.rect = Rect(self.position, self._size)
 
-    def tick(self):
+    def tick(self, capitalist=None, socialist=None):
         return
 
 
@@ -30,9 +30,13 @@ class Road_Cell(Cell):
         super().__init__(grid_ref, is_navigable=True)
 
 
+class Rock_Cell(Cell):
+    def __init__(self, grid_ref):
+        super().__init__(grid_ref, is_navigable=False)
+
+
 class Neutral_Cell(Cell):
     def __init__(self, grid_ref):
-        self.owner = Owner.Neutral
         super().__init__(grid_ref, is_navigable=True)
 
 
@@ -67,7 +71,7 @@ class Capitalist_Cell(Capturable_Cell):
     def __init__(self, grid_ref):
         super().__init__(grid_ref, goal=2000)
 
-    def tick(capitalist, socialist):
+    def tick(self, capitalist, socialist):
         super().tick(capitalist)
 
 
@@ -75,5 +79,5 @@ class Socialist_Cell(Capturable_Cell):
     def __init__(self, grid_ref):
         super().__init__(grid_ref, goal=1000)
 
-    def tick(capitalist, socialist):
+    def tick(self, capitalist, socialist):
         super().tick(socialist)

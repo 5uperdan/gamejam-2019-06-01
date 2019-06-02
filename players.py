@@ -154,23 +154,18 @@ class Player():
                 if cell.grid[0] > player_grid_ref[0]:
                     # push left
                     self.position[0] = cell.position[0] - self._size[0]
-                    print('budged')
                 if cell.grid[0] < player_grid_ref[0]:
                     # push right
                     self.position[0] = cell.position[0] + cell._size[0]
-                    print('budged')
                 if cell.grid[1] > player_grid_ref[1]:
                     # push up
                     self.position[1] = cell.position[1] - self._size[1]
-                    print('budged')
                 if cell.grid[1] < player_grid_ref[1]:
                     # push down
                     self.position[1] = cell.position[1] + cell._size[1]
-                    print('budged')
 
     def tick(self, inputs, cells, opponent_grid_ref):
         player_grid_ref = self.get_grid_ref()
-        print(player_grid_ref)
 
         self._handle_movement_inputs(inputs)
 

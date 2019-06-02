@@ -4,7 +4,7 @@ import pyglet
 from engine import Engine
 from sound import Tune
 from controls import get_inputs
-from gameobjects import Road_Cell, Neutral_Cell, Capitalist_Cell, Socialist_Cell
+from gameobjects import Road_Cell, Rock_Cell, Capitalist_Cell, Socialist_Cell
 from pygame.mixer import Sound, get_init, pre_init
 
 _image_library = {}
@@ -93,7 +93,6 @@ def __main__():
             tune.play('b')
         elif melody_loop_count >= 2300:
             melody_loop_count = -1
-        print(melody_loop_count)
         Tune.tick()
         melody_loop_count += 1
         engine_and_draw_loop_count += 1
@@ -118,14 +117,14 @@ def __main__():
         # draw cells
         for _, cell in engine.cells.items():
             if type(cell) is Road_Cell:
-                screen.blit(get_image('test/road.png'), cell.position)
-            elif type(cell) is Neutral_Cell:
-                screen.blit(get_image('test/neutral.png'), cell.position)
+                screen.blit(get_image('new/road_blank.png'), cell.position)
+            elif type(cell) is Rock_Cell:
+                screen.blit(get_image('new/rock.png'), cell.position)
             elif type(cell) is Capitalist_Cell:
-                screen.blit(get_image('test/capitalist.png'), cell.position)
+                screen.blit(get_image('new/office.png'), cell.position)
                 draw_progress_bar(screen, cell)
             elif type(cell) is Socialist_Cell:
-                screen.blit(get_image('test/socialist.png'), cell.position)
+                screen.blit(get_image('new/hospital.png'), cell.position)
                 draw_progress_bar(screen, cell)
             else:
                 continue
@@ -136,10 +135,10 @@ def __main__():
 
         # draw scores
         myfont = pygame.font.SysFont('Comic Sans MS', 20)
-        capitalist_score_text = myfont.render('Capitalism: ' + engine.capitalist.score , False, (0, 255, 0))
+        capitalist_score_text = myfont.render('Capitalism: ' + str(engine.capitalist.score) , False, (0, 255, 0))
         screen.blit(capitalist_score_text, (15, 15))
 
-        socialist_score_text = myfont.render('Socialism: ' + engine.socialist.score , False, (255, 0, 0))
+        socialist_score_text = myfont.render('Socialism: ' + str(engine.socialist.score) , False, (255, 0, 0))
         screen.blit(capitalist_score_text, (15, 45))
         
         # updates game screen
