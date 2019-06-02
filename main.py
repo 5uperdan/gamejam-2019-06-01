@@ -86,7 +86,7 @@ def __main__():
     clock = pyglet.clock.Clock()
     clock.set_fps_limit(90)
 
-    screen = pygame.display.set_mode((600, 600), pygame.FULLSCREEN)
+    screen = pygame.display.set_mode((600, 600))
     splash_screen(screen, clock)
     engine = Engine()
     running = True
