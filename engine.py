@@ -8,7 +8,7 @@ class Engine():
 
     def __init__(self):
         """ Setup game engine """
-        # initialise all game cells
+        # load level
         self.cells = {}
         for x in range(10):
             for y in range(10):
@@ -20,6 +20,7 @@ class Engine():
         self.cells[(7, 7)] = Neutral((7, 7))
 
         Engine.build_boundary(self.cells)
+        
         # initialise 2 players
         #player1_start_cell = random.choice(x for cells in self.cells.values)
 
@@ -52,10 +53,9 @@ class Engine():
     def tick(self, p1_inputs, p2_inputs):
         """ Progresses the game one tick forward """
 
-        # player only needs to know about the cell they are in and adjacent ones
-        # to check for collision.
         self.capitalist.tick(p1_inputs, self.cells)
         self.socialist.tick(p2_inputs, self.cells)
+        print(self.capitalist.get_grid_ref())
 
         for reference, cell in self.cells.items():
             cell.tick()

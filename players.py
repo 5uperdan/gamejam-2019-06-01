@@ -33,20 +33,23 @@ class Player():
         """ returns centre position """
         return self.position[0] + 7, self.position[1] + 7
 
-    def get_cell_ref(self):
-        """ returns the tuple cell location of the centre of the player """
+    def get_grid_ref(self):
+        """ returns the tuple grid location of the centre of the player """
         return (math.floor((self.position[0] + 7) / 60),
                 math.floor((self.position[1] + 7) / 60))
 
-    def get_surrounding_cells(self, player_gridref, cells):
-        """ returns a list of tuples [(x, y),...] which
-            are the cells surrounding the cell the player occupies """
+    @classmethod
+    def get_surrounding_unnavigable_cells(self, player_grid_ref, cells):
+        """ returns a list of cells which surround the player occupied cell
+            and are unnavigable
+            cells: all game cells
+        """
         
         surrounding_cells = []
         for x in (-1, 0, 1):
             for y in (-1, 0, 1):
-                if (x, y) != player_gridref:
-                    candidate_cell = cells[player_gridref[0] + x, player_gridref[1] + y]
+                if (x, y) != player_grid_ref:
+                    candidate_cell = cells[player_grid_ref[0] + x, player_grid_ref[1] + y]
                     if not candidate_cell.is_navigable:
                         surrounding_cells.append(candidate_cell)
         return surrounding_cells
@@ -61,12 +64,14 @@ class Player():
         self.position[1] += self._velocity[1]
 
     def tick(self, inputs, cells):
-        player_cell_ref = self.get_cell_ref()
+        player_grid_ref = self.get_grid_ref()
         self.handle_inputs(inputs)
         self._move()
 
-        surrounding_cells = self.get_surrounding_cells(player_cell_ref, cells)
-        for cell in surrounding_cells:
+        sur_unav_cells = Player.get_surrounding_unnavigable_cells(
+            player_grid_ref, cells)
+
+        for cell in sur_unav_cells:
             if self.rect.colliderect(cell.rect):
                 self.position = [500, 500]
                 self._velocity = [0, 0]
