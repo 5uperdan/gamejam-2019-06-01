@@ -54,10 +54,10 @@ class Engine():
         for reference, cell in self.cells.items():
             cell.tick(self.capitalist, self.socialist)
 
-        if self.capitalist.score >= 10000:
+        if self.capitalist.score >= 12500:
             return 'c'
 
-        if self.socialist.score >= 10000:
+        if self.socialist.score >= 12500:
             return 's'
 
         return ''

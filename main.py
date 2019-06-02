@@ -73,7 +73,7 @@ def draw_progress_bar(screen, cell):
 def splash_screen(screen, clock):
     screen.blit(get_image('new/splash_screen.png'), (0,0))
     pygame.display.flip()
-    for n in range(270):
+    for n in range(135):
         clock.tick()
     return
 
@@ -84,7 +84,7 @@ def __main__():
     pygame.font.init()
     pygame.mouse.set_visible(0)
     clock = pyglet.clock.Clock()
-    clock.set_fps_limit(90)
+    clock.set_fps_limit(30)
 
     screen = pygame.display.set_mode((600, 600))
     splash_screen(screen, clock)
@@ -93,7 +93,6 @@ def __main__():
 
     # main game loop
     melody_loop_count = 0
-    engine_and_draw_loop_count = 0
     
     while running:
         # playing the background melody in two keys
@@ -105,13 +104,7 @@ def __main__():
             melody_loop_count = -1
         Tune.tick()
         melody_loop_count += 1
-        engine_and_draw_loop_count += 1
         clock.tick()
-
-        if engine_and_draw_loop_count != 2:
-            continue
-
-        engine_and_draw_loop_count = 0
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
