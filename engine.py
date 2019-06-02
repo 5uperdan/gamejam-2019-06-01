@@ -55,7 +55,6 @@ class Engine():
 
         self.capitalist.tick(p1_inputs, self.cells)
         self.socialist.tick(p2_inputs, self.cells)
-        print(self.capitalist.get_grid_ref())
 
         for reference, cell in self.cells.items():
             cell.tick()
