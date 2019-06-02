@@ -49,7 +49,7 @@ class Capturable_Cell(Cell):
         """ returns fraction of completeness (1 is complete) """
         return self.progress / self.goal
 
-    def tick(self):
+    def tick(self, player):
         if self.is_complete:
             return
         if self.is_hindered:
@@ -60,13 +60,20 @@ class Capturable_Cell(Cell):
         if self.progress >= self.goal:
             self.progress = self.goal
             self.is_complete = True
+            player.score += 1000
 
 
 class Capitalist_Cell(Capturable_Cell):
     def __init__(self, grid_ref):
         super().__init__(grid_ref, goal=2000)
 
+    def tick(capitalist, socialist):
+        super().tick(capitalist)
+
 
 class Socialist_Cell(Capturable_Cell):
     def __init__(self, grid_ref):
         super().__init__(grid_ref, goal=1000)
+
+    def tick(capitalist, socialist):
+        super().tick(socialist)

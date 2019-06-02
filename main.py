@@ -72,6 +72,7 @@ def draw_progress_bar(screen, cell):
 def __main__():
     pre_init(44100, -16, 1, 1024)
     pygame.init()
+    pygame.font.init()
     pygame.mouse.set_visible(0)
     clock = pyglet.clock.Clock()
     clock.set_fps_limit(90)
@@ -133,6 +134,14 @@ def __main__():
         screen.blit(get_image('car_down.png'), engine.capitalist.position)
         screen.blit(get_image('bike_down_1.png'), engine.socialist.position)
 
+        # draw scores
+        myfont = pygame.font.SysFont('Comic Sans MS', 20)
+        capitalist_score_text = myfont.render('Capitalism: ' + engine.capitalist.score , False, (0, 255, 0))
+        screen.blit(capitalist_score_text, (15, 15))
+
+        socialist_score_text = myfont.render('Socialism: ' + engine.socialist.score , False, (255, 0, 0))
+        screen.blit(capitalist_score_text, (15, 45))
+        
         # updates game screen
         pygame.display.flip()
 

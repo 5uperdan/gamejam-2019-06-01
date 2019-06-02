@@ -16,20 +16,9 @@ class Engine():
 
         Engine.build_boundary(self.cells)
         
-        # initialise 2 players
-        #player1_start_cell = random.choice(x for cells in self.cells.values)
+        self.socialist = Socialist([75, 75])
 
-        #while player1_start_cell.is_navigable is False:
-        #    player1_start_cell = random.choice(self.cells)
-
-        self.capitalist = Capitalist([60, 60])
-
-        #player2_start_cell = random.choice(x for cells in self.cells.values)
-
-        #while player2_start_cell.is_navigable is False:
-        #    player2_start_cell = random.choice(self.cells)
-
-        self.socialist = Socialist([30, 30])
+        self.capitalist = Capitalist([550, 75])
 
     @classmethod
     def build_boundary(self, cells):
@@ -63,7 +52,7 @@ class Engine():
             self.socialist.killed()
 
         for reference, cell in self.cells.items():
-            cell.tick()
+            cell.tick(self.capitalist, self.socialist)
 
 def load_level(cells):
     for grid in [(0, 0), (6, 6)]:
