@@ -48,8 +48,8 @@ class Engine():
         for x in range(10):
             for y in (-1, 10):
                 cells[(x, y)] = Cell((x, y), is_navigable=False)
-    
-    
+
+
     def tick(self, p1_inputs, p2_inputs):
         """ Progresses the game one tick forward """
 

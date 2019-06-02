@@ -41,7 +41,6 @@ class Player():
             and are unnavigable
             cells: all game cells
         """
-        
         surrounding_cells = []
         for x in (-1, 0, 1):
             for y in (-1, 0, 1):
@@ -51,10 +50,12 @@ class Player():
                         surrounding_cells.append(candidate_cell)
         return surrounding_cells
 
-    def _damp(self):
+    def _damp(self, damp_x=True, damp_y=True):
         """ Decelerates x and y axis movement """
-        self._velocity[0] = int(0.7 * self._velocity[0])
-        self._velocity[1] = int(0.7 * self._velocity[1])
+        if damp_x:
+            self._velocity[0] = int(0.7 * self._velocity[0])
+        if damp_y:
+            self._velocity[1] = int(0.7 * self._velocity[1])
 
     def _move(self):
         self.position[0] += self._velocity[0]
@@ -93,18 +94,26 @@ class Player():
 
 
     def handle_inputs(self, inputs):
-        if inputs == [] or inputs == [Inputs.ACTION]:
-            self._damp()
-            return
+        damp_x = True
+        damp_y = True
 
         if Inputs.UP in inputs:
             self._accelerate((0, -1))
+            damp_y = False
+
         if Inputs.RIGHT in inputs:
             self._accelerate((1, 0))
+            damp_x = False
+
         if Inputs.DOWN in inputs:
             self._accelerate((0, 1))
+            damp_y = False
+
         if Inputs.LEFT in inputs:
             self._accelerate((-1, 0))
+            damp_x = False
+
+        self._damp(damp_x, damp_y)
 
 
 class Capitalist(Player):
@@ -113,6 +122,9 @@ class Capitalist(Player):
         self._heading = Headings.North
         self._size = (30, 30)
         super().__init__(position, max_speed=10)
+
+    #def action(self, cells):
+
 
 
 class Socialist(Player):

@@ -77,7 +77,7 @@ def __main__():
                 screen.blit(get_image('test/socialist.png'), cell.position)
             else:
                 continue
-                
+
         # draw players
         screen.blit(get_image('car_down.png'), engine.capitalist.position)
         screen.blit(get_image('bike_down_1.png'), engine.socialist.position)
