@@ -22,6 +22,25 @@ def get_image(path):
     return image
 
 
+RED = (255, 0, 0)
+ORANGE = (255, 165, 0)
+GREEN = (0, 255, 100)
+
+
+def draw_progress_bar(screen, cell):
+    if cell.is_complete:
+        colour = GREEN
+    elif cell.is_hindered:
+        colour = RED
+    else:  # regular
+        colour = ORANGE
+
+    pygame.draw.rect(
+        screen,
+        colour,
+        (cell.position, (60 * cell.get_progress(), 5)))
+
+
 def __main__():
     pygame.init()
     pygame.mouse.set_visible(0)
@@ -53,6 +72,7 @@ def __main__():
                 screen.blit(get_image('test/neutral.png'), cell.position)
             elif type(cell) is Capitalist_Cell:
                 screen.blit(get_image('test/capitalist.png'), cell.position)
+                draw_progress_bar(screen, cell)
             elif type(cell) is Socialist_Cell:
                 screen.blit(get_image('test/socialist.png'), cell.position)
             else:

@@ -40,18 +40,24 @@ class Capturable_Cell(Cell):
         self.progress = 0
         self.goal = goal
         self.is_complete = False
+        self.is_hindered = False
 
         super().__init__(grid_ref, is_navigable=False)
 
     def get_progress(self):
-        """ returns a string of the progress bar """
-        return "{0}/{1}".format(self.progress, self.goal)
+        """ returns fraction of completeness (1 is complete) """
+        return self.progress / self.goal
 
     def tick(self):
         if self.is_complete:
             return
-        self.progress += 1
+        if self.is_hindered:
+            self.progress += 1
+        else:
+            self.progress += 2
+
         if self.progress >= self.goal:
+            self.progress = self.goal
             self.is_complete = True
 
 
