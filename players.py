@@ -143,8 +143,18 @@ class Player():
 
         for cell in sur_unav_cells:
             if self.rect.colliderect(cell.rect):
-                self.position = [500, 500]
-                self._velocity = [0, 0]
+                if cell.grid[0] > player_grid_ref[0]:
+                    # push left
+                    self.position[0] = cell.position[0] - self._size[0]
+                if cell.grid[0] < player_grid_ref[0]:
+                    # push right
+                    self.position[0] = cell.position[0] + cell._size[0]
+                if cell.grid[1] > player_grid_ref[1]:
+                    # push up
+                    self.position[1] = cell.position[1] - self._size[1]
+                if cell.grid[1] < player_grid_ref[1]:
+                    # push down
+                    self.position[1] = cell.position[1] + cell._size[1]
 
     def tick(self, inputs, cells, opponent_grid_ref):
         player_grid_ref = self.get_grid_ref()
@@ -152,11 +162,11 @@ class Player():
         self._handle_movement_inputs(inputs)
 
         if Inputs.ACTION in inputs:
-            self.handle_action_input(player_grid_ref, opponent_grid_ref, cells)
+            self._handle_action_input(player_grid_ref, opponent_grid_ref, cells)
 
         self._move()
 
-        self._handle_environment_collisions()
+        self._handle_environment_collisions(player_grid_ref, cells)
 
 
 class Capitalist(Player):
