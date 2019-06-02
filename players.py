@@ -3,6 +3,7 @@ import pygame
 from controls import Inputs
 import math
 
+
 class Headings(Enum):
     North = 0
     East = 1
@@ -10,20 +11,16 @@ class Headings(Enum):
     West = 3
 
 
-
 class Player():
     """ represents a player """
 
-    MAX_SPEED = 10
-
-    def __init__(self, position):
+    def __init__(self, position, max_speed):
         """
         position: list [x,y]
         """
         self.position = position
-        self._heading = Headings.North
         self._velocity = [0, 0]
-        self._size = (15, 15)
+        self.MAX_SPEED = max_speed
 
     @property
     def rect(self):
@@ -75,24 +72,24 @@ class Player():
             if self.rect.colliderect(cell.rect):
                 self.position = [500, 500]
                 self._velocity = [0, 0]
-        
+
 
     def _accelerate(self, acceleration):
         """ Increases velocity """
         self._velocity[0] += acceleration[0]
         self._velocity[1] += acceleration[1]
 
-        if self._velocity[0] > Player.MAX_SPEED:
-            self._velocity[0] = Player.MAX_SPEED
+        if self._velocity[0] > self.MAX_SPEED:
+            self._velocity[0] = self.MAX_SPEED
 
-        if self._velocity[0] < - Player.MAX_SPEED:
-            self._velocity[0] = - Player.MAX_SPEED
+        if self._velocity[0] < - self.MAX_SPEED:
+            self._velocity[0] = - self.MAX_SPEED
 
-        if self._velocity[1] > Player.MAX_SPEED:
-            self._velocity[1] = Player.MAX_SPEED
+        if self._velocity[1] > self.MAX_SPEED:
+            self._velocity[1] = self.MAX_SPEED
 
-        if self._velocity[1] < - Player.MAX_SPEED:
-            self._velocity[1] = - Player.MAX_SPEED
+        if self._velocity[1] < - self.MAX_SPEED:
+            self._velocity[1] = - self.MAX_SPEED
 
 
     def handle_inputs(self, inputs):
@@ -108,3 +105,19 @@ class Player():
             self._accelerate((0, 1))
         if Inputs.LEFT in inputs:
             self._accelerate((-1, 0))
+
+
+class Capitalist(Player):
+
+    def __init__(self, position):
+        self._heading = Headings.North
+        self._size = (30, 30)
+        super().__init__(position, max_speed=10)
+
+
+class Socialist(Player):
+
+    def __init__(self, position):
+        self._heading = Headings.South
+        self._size = (15, 15)
+        super().__init__(position, max_speed=7)

@@ -20,23 +20,22 @@ class Cell():
         self.position = (grid_ref[0] * 60, grid_ref[1] * 60)
         self.rect = Rect(self.position, (59, 59))
 
-
     def tick(self):
         return
 
 
-class Road(Cell):
+class Road_Cell(Cell):
     def __init__(self, grid_ref):
         super().__init__(grid_ref, is_navigable=True)
 
 
-class Neutral(Cell):
+class Neutral_Cell(Cell):
     def __init__(self, grid_ref):
         self.owner = Owner.Neutral
         super().__init__(grid_ref, is_navigable=True)
 
 
-class Progressing(Cell):
+class Capturable_Cell(Cell):
     def __init__(self, grid_ref, goal):
         self.progress = 0
         self.goal = goal
@@ -56,14 +55,14 @@ class Progressing(Cell):
             self.is_complete = True
 
 
-class Capitalist(Progressing):
+class Capitalist_Cell(Capturable_Cell):
     def __init__(self, grid_ref):
         self.owner = Owner.Capitalist
 
         super().__init__(grid_ref, goal=2000)
 
 
-class Socialist(Progressing):
+class Socialist_Cell(Capturable_Cell):
     def __init__(self, grid_ref):
         self.owner = Owner.Socialist
         super().__init__(grid_ref, goal=1000)

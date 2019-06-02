@@ -1,5 +1,6 @@
-from gameobjects import Cell, Road, Neutral, Capitalist, Socialist
-from players import Player
+from gameobjects import (Cell, Road_Cell, Neutral_Cell,
+                         Capitalist_Cell, Socialist_Cell)
+from players import Capitalist, Socialist
 import random
 
 
@@ -12,12 +13,11 @@ class Engine():
         self.cells = {}
         for x in range(10):
             for y in range(10):
-                self.cells[(x, y)] = Neutral((x, y))
+                self.cells[(x, y)] = Neutral_Cell((x, y))
 
-        self.cells[(2, 2)] = Socialist((2, 2))
-        self.cells[(3, 3)] = Road((3, 3))
-        self.cells[(5, 5)] = Capitalist((5, 5))
-        self.cells[(7, 7)] = Neutral((7, 7))
+        self.cells[(2, 2)] = Socialist_Cell((2, 2))
+        self.cells[(3, 3)] = Road_Cell((3, 3))
+        self.cells[(5, 5)] = Capitalist_Cell((5, 5))
 
         Engine.build_boundary(self.cells)
         
@@ -27,14 +27,14 @@ class Engine():
         #while player1_start_cell.is_navigable is False:
         #    player1_start_cell = random.choice(self.cells)
 
-        self.capitalist = Player([60, 60])
+        self.capitalist = Capitalist([60, 60])
 
         #player2_start_cell = random.choice(x for cells in self.cells.values)
 
         #while player2_start_cell.is_navigable is False:
         #    player2_start_cell = random.choice(self.cells)
 
-        self.socialist = Player([30, 30])
+        self.socialist = Socialist([30, 30])
 
     @classmethod
     def build_boundary(self, cells):

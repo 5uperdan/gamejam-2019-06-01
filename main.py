@@ -3,7 +3,7 @@ import pygame
 import pyglet
 from engine import Engine
 from controls import get_inputs
-from gameobjects import Road, Neutral, Capitalist, Socialist
+from gameobjects import Road_Cell, Neutral_Cell, Capitalist_Cell, Socialist_Cell
 
 _image_library = {}
 
@@ -16,7 +16,7 @@ def get_image(path):
     global _image_library
     image = _image_library.get(path)
     if image is None:
-        canonicalized_path = "assets/test/" + path.replace("/", os.sep).replace("\\", os.sep)
+        canonicalized_path = "assets/" + path.replace("/", os.sep).replace("\\", os.sep)
         image = pygame.image.load(canonicalized_path)
         _image_library[path] = image
     return image
@@ -47,20 +47,20 @@ def __main__():
 
         # draw cells
         for _, cell in engine.cells.items():
-            if type(cell) is Road:
-                screen.blit(get_image('road.png'), cell.position)
-            elif type(cell) is Neutral:
-                screen.blit(get_image('neutral.png'), cell.position)
-            elif type(cell) is Capitalist:
-                screen.blit(get_image('capitalist.png'), cell.position)
-            elif type(cell) is Socialist:
-                screen.blit(get_image('socialist.png'), cell.position)
+            if type(cell) is Road_Cell:
+                screen.blit(get_image('test/road.png'), cell.position)
+            elif type(cell) is Neutral_Cell:
+                screen.blit(get_image('test/neutral.png'), cell.position)
+            elif type(cell) is Capitalist_Cell:
+                screen.blit(get_image('test/capitalist.png'), cell.position)
+            elif type(cell) is Socialist_Cell:
+                screen.blit(get_image('test/socialist.png'), cell.position)
             else:
                 continue
                 
         # draw players
-        screen.blit(get_image('car.png'), engine.capitalist.position)
-        screen.blit(get_image('bike.png'), engine.socialist.position)
+        screen.blit(get_image('car_down.png'), engine.capitalist.position)
+        screen.blit(get_image('bike_down_1.png'), engine.socialist.position)
 
         # updates game screen
         pygame.display.flip()
