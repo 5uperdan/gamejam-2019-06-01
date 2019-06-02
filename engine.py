@@ -15,7 +15,9 @@ class Engine():
             for y in range(10):
                 self.cells[(x, y)] = Neutral_Cell((x, y))
 
+        self.cells[(2, 7)] = Socialist_Cell((2, 7))
         self.cells[(2, 2)] = Socialist_Cell((2, 2))
+        self.cells[(7, 2)] = Socialist_Cell((7, 2))
         self.cells[(3, 3)] = Road_Cell((3, 3))
         self.cells[(5, 5)] = Capitalist_Cell((5, 5))
 
@@ -69,3 +71,9 @@ class Engine():
 
         for reference, cell in self.cells.items():
             cell.tick()
+
+        print(self.capitalist.rect)
+        print(self.cells[(2, 2)].rect)
+        print(self.capitalist.rect.colliderect(self.cells[(2, 2)].rect))
+        print(self.cells[(2, 2)].is_navigable)
+        
