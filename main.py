@@ -6,6 +6,7 @@ from sound import Tune
 from controls import get_inputs
 from gameobjects import Road_Cell, Rock_Cell, Capitalist_Cell, Socialist_Cell, Neutral_Cell
 from pygame.mixer import Sound, get_init, pre_init
+import time
 
 _image_library = {}
 
@@ -78,12 +79,6 @@ def splash_screen(screen, clock):
 
 
 def __main__():
-<<<<<<< HEAD
-    splash_screen()
-
-=======
-    
->>>>>>> 50c00ce6f943abdeca1dbe696d2c6aa94f26f7bb
     pre_init(44100, -16, 1, 1024)
     pygame.init()
     pygame.font.init()
@@ -91,7 +86,7 @@ def __main__():
     clock = pyglet.clock.Clock()
     clock.set_fps_limit(90)
 
-    screen = pygame.display.set_mode((600, 600))
+    screen = pygame.display.set_mode((600, 600), pygame.FULLSCREEN)
     splash_screen(screen, clock)
     engine = Engine()
     running = True
@@ -125,9 +120,28 @@ def __main__():
         screen.fill((0, 0, 0))
 
         pressed = pygame.key.get_pressed()
+
+        if pressed[pygame.K_ESCAPE]:
+            return
+
         p1_inputs, p2_inputs = get_inputs(pressed)
 
-        engine.tick(p1_inputs, p2_inputs)
+        if engine.tick(p1_inputs, p2_inputs) == 'c':
+            myfont = pygame.font.SysFont('Comic Sans MS', 35)
+            capitalist_score_text = myfont.render('The socialist state has been knocked down!', False, (0, 255, 0))
+            screen.blit(capitalist_score_text, (15, 15))
+            pygame.display.flip()
+            time.sleep(5)
+            engine = Engine()
+
+
+        elif engine.tick(p1_inputs, p2_inputs) == 's':
+            myfont = pygame.font.SysFont('Comic Sans MS', 35)
+            capitalist_score_text = myfont.render('The capitalist state has been knocked down!: ', False, (0, 255, 0))
+            screen.blit(capitalist_score_text, (15, 15))
+            pygame.display.flip()
+            time.sleep(5)
+            engine = Engine()
         
         # draw cells
         for _, cell in engine.cells.items():
@@ -139,7 +153,7 @@ def __main__():
                 screen.blit(get_image('new/office.png'), cell.position)
                 draw_progress_bar(screen, cell)
             elif type(cell) is Socialist_Cell:
-                screen.blit(get_image('new/hospital.png'), cell.position)
+                screen.blit(get_image('new/park-lake.png'), cell.position)
                 draw_progress_bar(screen, cell)
             elif type(cell) is Neutral_Cell:
                 screen.blit(get_image('new/neutral.png'), cell.position)

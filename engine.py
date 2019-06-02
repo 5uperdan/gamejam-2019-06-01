@@ -54,6 +54,14 @@ class Engine():
         for reference, cell in self.cells.items():
             cell.tick(self.capitalist, self.socialist)
 
+        if self.capitalist.score >= 10000:
+            return 'c'
+
+        if self.socialist.score >= 10000:
+            return 's'
+
+        return ''
+
 def load_level(cells):
     for grid in [(0, 0), (6, 6)]:
         cells[grid] = Socialist_Cell(grid)

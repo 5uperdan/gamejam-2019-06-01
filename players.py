@@ -171,7 +171,7 @@ class Player():
 
     def tick(self, inputs, cells, opponent_grid_ref):
         if self.energy < Player.MAX_ENERGY:
-            self.energy += 1
+            self.energy += 0.5
 
         player_grid_ref = self.get_grid_ref()
 
@@ -192,7 +192,7 @@ class Capitalist(Player):
             position,
             size=(30, 30),
             headings=[Headings.North],
-            max_speed=7)
+            max_speed=4)
 
     def action(self, cells, target_grid_refs):
         for grid_ref in target_grid_refs:
@@ -208,7 +208,7 @@ class Socialist(Player):
             position,
             size=(15, 15),
             headings=[Headings.South],
-            max_speed=4)
+            max_speed=2)
 
     def action(self, cells, target_grid_refs):
         for grid_ref in target_grid_refs:
