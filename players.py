@@ -16,13 +16,14 @@ class Headings(Enum):
 class Player():
     """ represents a player """
 
-    def __init__(self, position, headings, max_speed):
+    def __init__(self, position, size, headings, max_speed):
         """
         position: list [x,y]
         headings: list [HeadingEnums, ...]
         """
         self.score = 0
         self.position = position
+        self._size = size
         self.headings = headings
         self._velocity = [0, 0]
         self.MAX_SPEED = max_speed
@@ -33,12 +34,14 @@ class Player():
 
     def get_centre(self):
         """ returns centre position """
-        return self.position[0] + 7, self.position[1] + 7
+        return (self.position[0] + self._size[0] // 2,
+                self.position[1] + self._size[1] // 2)
 
     def get_grid_ref(self):
         """ returns the tuple grid location of the centre of the player """
-        return (math.floor((self.position[0] + 7) / 60),
-                math.floor((self.position[1] + 7) / 60))
+        centre_of_player = self.get_centre()
+        return (math.floor(centre_of_player[0] / 60),
+                math.floor(centre_of_player[1] / 60))
 
     @classmethod
     def get_target_grid_refs(self, player_grid_ref, headings):
@@ -66,8 +69,12 @@ class Player():
         surrounding_cells = []
         for x in (-1, 0, 1):
             for y in (-1, 0, 1):
-                if (x, y) != player_grid_ref:
-                    candidate_cell = cells[player_grid_ref[0] + x, player_grid_ref[1] + y]
+                candidate_grid_ref = (
+                    player_grid_ref[0] + x,
+                    player_grid_ref[1] + y)
+
+                if candidate_grid_ref != player_grid_ref:
+                    candidate_cell = cells[candidate_grid_ref]
                     if not candidate_cell.is_navigable:
                         surrounding_cells.append(candidate_cell)
         return surrounding_cells
@@ -146,18 +153,23 @@ class Player():
                 if cell.grid[0] > player_grid_ref[0]:
                     # push left
                     self.position[0] = cell.position[0] - self._size[0]
+                    print('budged')
                 if cell.grid[0] < player_grid_ref[0]:
                     # push right
                     self.position[0] = cell.position[0] + cell._size[0]
+                    print('budged')
                 if cell.grid[1] > player_grid_ref[1]:
                     # push up
                     self.position[1] = cell.position[1] - self._size[1]
+                    print('budged')
                 if cell.grid[1] < player_grid_ref[1]:
                     # push down
                     self.position[1] = cell.position[1] + cell._size[1]
+                    print('budged')
 
     def tick(self, inputs, cells, opponent_grid_ref):
         player_grid_ref = self.get_grid_ref()
+        print(player_grid_ref)
 
         self._handle_movement_inputs(inputs)
 
@@ -172,9 +184,9 @@ class Player():
 class Capitalist(Player):
 
     def __init__(self, position):
-        self._size = (30, 30)
         super().__init__(
             position,
+            size=(30, 30),
             headings=[Headings.North],
             max_speed=7)
 
@@ -189,9 +201,9 @@ class Capitalist(Player):
 class Socialist(Player):
 
     def __init__(self, position):
-        self._size = (15, 15)
         super().__init__(
             position,
+            size=(15, 15),
             headings=[Headings.South],
             max_speed=4)
 
@@ -201,4 +213,4 @@ class Socialist(Player):
 
     def killed(self):
         """ return to one of the hospitals """
-        self.position = choice((10, 10), (50, 50), (80, 80))
+        self.position = choice([[10, 10], [50, 50], [80, 80]])

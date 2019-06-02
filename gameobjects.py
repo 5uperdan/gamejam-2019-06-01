@@ -64,12 +64,9 @@ class Capturable_Cell(Cell):
 
 class Capitalist_Cell(Capturable_Cell):
     def __init__(self, grid_ref):
-        self.owner = Owner.Capitalist
-
         super().__init__(grid_ref, goal=2000)
 
 
 class Socialist_Cell(Capturable_Cell):
     def __init__(self, grid_ref):
-        self.owner = Owner.Socialist
         super().__init__(grid_ref, goal=1000)
