@@ -1,4 +1,4 @@
-from gameobjects import Capitalist_Cell, Capturable_Cell, Socialist_Cell
+from gameobjects import Capitalist_Cell, Capturable_Cell, Socialist_Cell, Neutral_Cell
 
 
 def capitalise_cell(cells, target_grid_ref):
@@ -10,7 +10,7 @@ def capitalise_cell(cells, target_grid_ref):
 
     if type(cell) is Capitalist_Cell:
         return False
-    if type(cell) is Capturable_Cell:
+    if type(cell) is Neutral_Cell:
         cells[target_grid_ref] = Capitalist_Cell(target_grid_ref)
         return True
     if type(cell) is Socialist_Cell:
@@ -27,7 +27,7 @@ def socialise_cell(cells, target_grid_ref):
 
     if type(cell) is Socialist_Cell:
         return False
-    if type(cell) is Capturable_Cell:
+    if type(cell) is Neutral_Cell:
         cells[target_grid_ref] = Socialist_Cell(target_grid_ref)
         return True
     if type(cell) is Capitalist_Cell:

@@ -4,7 +4,7 @@ import pyglet
 from engine import Engine
 from sound import Tune
 from controls import get_inputs
-from gameobjects import Road_Cell, Rock_Cell, Capitalist_Cell, Socialist_Cell
+from gameobjects import Road_Cell, Rock_Cell, Capitalist_Cell, Socialist_Cell, Neutral_Cell
 from pygame.mixer import Sound, get_init, pre_init
 
 _image_library = {}
@@ -75,7 +75,7 @@ def splash_screen():
 
 def __main__():
     splash_screen()
-    
+
     pre_init(44100, -16, 1, 1024)
     pygame.init()
     pygame.font.init()
@@ -132,20 +132,33 @@ def __main__():
             elif type(cell) is Socialist_Cell:
                 screen.blit(get_image('new/hospital.png'), cell.position)
                 draw_progress_bar(screen, cell)
+            elif type(cell) is Neutral_Cell:
+                screen.blit(get_image('new/neutral.png'), cell.position)
             else:
                 continue
 
         # draw players
-        screen.blit(get_image('car_down.png'), engine.capitalist.position)
+        screen.blit(get_image('new/car.png'), engine.capitalist.position)
         screen.blit(get_image('bike_down_1.png'), engine.socialist.position)
+
+        # draw energy meters
+        pygame.draw.rect(
+            screen,
+            GREEN,
+            (engine.capitalist.position, (30 * engine.capitalist.energy_bar, 5)))
+
+        pygame.draw.rect(
+            screen,
+            GREEN,
+            ((engine.socialist.position[0] - 15, engine.socialist.position[1]), (30 * engine.socialist.energy_bar, 5)))
 
         # draw scores
         myfont = pygame.font.SysFont('Comic Sans MS', 20)
-        capitalist_score_text = myfont.render('Capitalism: ' + str(engine.capitalist.score) , False, (0, 255, 0))
+        capitalist_score_text = myfont.render('Capitalism: ' + str(engine.capitalist.score), False, (0, 255, 0))
         screen.blit(capitalist_score_text, (15, 15))
 
-        socialist_score_text = myfont.render('Socialism: ' + str(engine.socialist.score) , False, (255, 0, 0))
-        screen.blit(capitalist_score_text, (15, 45))
+        socialist_score_text = myfont.render('Socialism: ' + str(engine.socialist.score), False, (255, 0, 0))
+        screen.blit(socialist_score_text, (15, 45))
         
         # updates game screen
         pygame.display.flip()

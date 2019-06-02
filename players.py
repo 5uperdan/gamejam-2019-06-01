@@ -15,7 +15,7 @@ class Headings(Enum):
 
 class Player():
     """ represents a player """
-
+    MAX_ENERGY = 300
     def __init__(self, position, size, headings, max_speed):
         """
         position: list [x,y]
@@ -28,6 +28,11 @@ class Player():
         self.headings = headings
         self._velocity = [0, 0]
         self.MAX_SPEED = max_speed
+
+    @property
+    def energy_bar(self):
+        """ returns a decimal of energy completion """
+        return self.energy / Player.MAX_ENERGY
 
     @property
     def rect(self):
@@ -165,6 +170,9 @@ class Player():
                     self.position[1] = cell.position[1] + cell._size[1]
 
     def tick(self, inputs, cells, opponent_grid_ref):
+        if self.energy < Player.MAX_ENERGY:
+            self.energy += 1
+
         player_grid_ref = self.get_grid_ref()
 
         self._handle_movement_inputs(inputs)

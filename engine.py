@@ -48,8 +48,8 @@ class Engine():
             opponent_grid_ref=self.capitalist.get_grid_ref())
 
         if self.capitalist.rect.colliderect(self.socialist.rect):
-            self.capitalist.killed_socialist()
             self.socialist.killed()
+            self.capitalist.score += 200
 
         for reference, cell in self.cells.items():
             cell.tick(self.capitalist, self.socialist)
