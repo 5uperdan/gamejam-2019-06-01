@@ -72,7 +72,7 @@ def __main__():
     pygame.init()
     pygame.mouse.set_visible(0)
     clock = pyglet.clock.Clock()
-    clock.set_fps_limit(30)
+    clock.set_fps_limit(90)
 
     screen = pygame.display.set_mode((600, 600))
     engine = Engine()
@@ -80,52 +80,60 @@ def __main__():
 
     # main game loop
     melody_loop_count = 0
+    engine_and_draw_loop_count = 0
+    
     while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-
-        screen.fill((255, 255, 255))
-
-        pressed = pygame.key.get_pressed()
-        p1_inputs, p2_inputs = get_inputs(pressed)
-
-        engine.tick(p1_inputs, p2_inputs)
         
         # playing the background melody in two keys
         if melody_loop_count == 0:
             tune.play('a')
-        if melody_loop_count == 370:
+        if melody_loop_count == 1110:
             tune.play('b')
-        if melody_loop_count >= 720:
+        if melody_loop_count >= 2220:
             melody_loop_count = 0
         else:
             melody_loop_count += 1
         
         Tune.tick()
+        
+        if engine_and_draw_loop_count == 0:
+            
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+        
+            screen.fill((255, 255, 255))
 
-        # draw cells
-        for _, cell in engine.cells.items():
-            if type(cell) is Road_Cell:
-                screen.blit(get_image('test/road.png'), cell.position)
-            elif type(cell) is Neutral_Cell:
-                screen.blit(get_image('test/neutral.png'), cell.position)
-            elif type(cell) is Capitalist_Cell:
-                screen.blit(get_image('test/capitalist.png'), cell.position)
-                draw_progress_bar(screen, cell)
-            elif type(cell) is Socialist_Cell:
-                screen.blit(get_image('test/socialist.png'), cell.position)
-                draw_progress_bar(screen, cell)
-            else:
-                continue
+            pressed = pygame.key.get_pressed()
+            p1_inputs, p2_inputs = get_inputs(pressed)
 
-        # draw players
-        screen.blit(get_image('car_down.png'), engine.capitalist.position)
-        screen.blit(get_image('bike_down_1.png'), engine.socialist.position)
+            engine.tick(p1_inputs, p2_inputs)
+            
+            # draw cells
+            for _, cell in engine.cells.items():
+                if type(cell) is Road_Cell:
+                    screen.blit(get_image('test/road.png'), cell.position)
+                elif type(cell) is Neutral_Cell:
+                    screen.blit(get_image('test/neutral.png'), cell.position)
+                elif type(cell) is Capitalist_Cell:
+                    screen.blit(get_image('test/capitalist.png'), cell.position)
+                    draw_progress_bar(screen, cell)
+                elif type(cell) is Socialist_Cell:
+                    screen.blit(get_image('test/socialist.png'), cell.position)
+                    draw_progress_bar(screen, cell)
+                else:
+                    continue
 
-        # updates game screen
-        pygame.display.flip()
-        clock.tick()
+            # draw players
+            screen.blit(get_image('car_down.png'), engine.capitalist.position)
+            screen.blit(get_image('bike_down_1.png'), engine.socialist.position)
+
+            # updates game screen
+            pygame.display.flip()
+            clock.tick()
+        
+        if engine_and_draw_loop_count >= 2:
+            engine_and_draw_loop_count = 0
 
 
     pygame.quit()
