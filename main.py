@@ -88,11 +88,11 @@ def __main__():
         # playing the background melody in two keys
         if melody_loop_count == 0:
             tune.play('a')
-        #elif melody_loop_count == 1110:
-        #    tune.play('b')
-        #elif melody_loop_count >= 2220:
-        #    melody_loop_count = 0
-
+        elif melody_loop_count == 1150:
+            tune.play('b')
+        elif melody_loop_count >= 2300:
+            melody_loop_count = -1
+        print(melody_loop_count)
         Tune.tick()
         melody_loop_count += 1
         engine_and_draw_loop_count += 1
