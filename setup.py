@@ -1,10 +1,13 @@
 from cx_Freeze import setup, Executable
 import os
+import sys
 
-#may need something like these
-#os.environ['TCL_LIBRARY'] = "C:\\Program Files\\Python35\\tcl\\tcl8.6"
-#os.environ['TK_LIBRARY'] = "C:\\Program Files\\Python35\\tcl\\tk8.6"
+# may need something like these
+#os.environ['TCL_LIBRARY'] = "C:\\Users\\danny\\Envs\\gamejam-2019-06-01\\tcl\\tcl8.6"
+#os.environ['TK_LIBRARY'] = "C:\\Users\\danny\\Envs\\gamejam-2019-06-01\\tcl\\tk8.6"
 
+os.environ['TCL_LIBRARY'] = sys.path[0] + "\\win-buildrequirements\\tcl8.6"
+os.environ['TK_LIBRARY'] = sys.path[0] + "\\win-buildrequirements\\tk8.6"
 
 setup(name="KNOCKING DOWN CAPITALISM",
       version="0.1",
