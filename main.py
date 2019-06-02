@@ -2,6 +2,7 @@ import os
 import pygame
 import pyglet
 from engine import Engine
+from sound import Tune
 from controls import get_inputs
 from gameobjects import Road_Cell, Neutral_Cell, Capitalist_Cell, Socialist_Cell
 
@@ -26,6 +27,32 @@ RED = (255, 0, 0)
 ORANGE = (255, 165, 0)
 GREEN = (0, 255, 100)
 
+tune = Tune()
+tune.sequence_a = ['c1n','d1n','c1n','e1n','e1n','d1n','c1n',
+                   'c1n','d1n','c1n','e1n','e1n','d1n','c1n',
+                   'f1n','g1n','f1n','a2n','a2n','g1n','f1n',
+                   'c1n','d1n','c1n','e1n','e1n','d1n','c1n',
+                   'g1n','a2n','g1n','b2n','b2n','a2n','g1n',
+                   'a2n','a2n','g1n','f1n','f1n','e1n','d1n','c1n']
+tune.sequence_b = ['c1n','d1n','c1n','d1+','d1+','d1n','c1n',
+                  'c1n','d1n','c1n','d1+','d1+','d1n','c1n',
+                  'f1n','g1n','f1n','g1+','g1+','g1n','f1n',
+                  'c1n','d1n','c1n','d1+','d1+','d1n','c1n',
+                  'g1n','a2n','g1n','a2+','a2+','a2n','g1n',
+                  'g1+','g1+','g1n','f1n','f1n','d1+','d1n','c1n']
+tune.lengths = [0.6, 0.6, 0.6, 0.3, 1.2, 0.6, 5.4,
+                0.6, 0.6, 0.6, 0.3, 1.2, 0.6, 5.4,
+                0.6, 0.6, 0.6, 0.3, 1.2, 0.6, 5.4,
+                0.6, 0.6, 0.6, 0.3, 1.2, 0.6, 5.4,
+                0.6, 0.6, 0.6, 0.3, 1.2, 0.6, 5.4,
+                0.6, 0.6, 0.6, 0.3, 1.2, 0.6, 2.5, 2.5]
+tune.pauses = [0.8, 0.8, 0.8, 1.6, 1.6, 0.8, 6.0,
+               0.8, 0.8, 0.8, 1.6, 1.6, 0.8, 6.0,
+               0.8, 0.8, 0.8, 1.6, 1.6, 0.8, 6.0,
+               0.8, 0.8, 0.8, 1.6, 1.6, 0.8, 6.0,
+               0.8, 0.8, 0.8, 1.6, 1.6, 0.8, 6.0,
+               0.8, 0.8, 0.8, 1.6, 1.6, 0.8, 3.0, 3.0]
+tune.speed = 6.0
 
 def draw_progress_bar(screen, cell):
     if cell.is_complete:
@@ -52,6 +79,7 @@ def __main__():
     running = True
 
     # main game loop
+    melody_loop_count = 0
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -63,6 +91,18 @@ def __main__():
         p1_inputs, p2_inputs = get_inputs(pressed)
 
         engine.tick(p1_inputs, p2_inputs)
+        
+        # playing the background melody in two keys
+        if melody_loop_count == 0:
+            tune.play('a')
+        if melody_loop_count == 370:
+            tune.play('b')
+        if melody_loop_count >= 720:
+            melody_loop_count = 0
+        else:
+            melody_loop_count += 1
+        
+        Tune.tick()
 
         # draw cells
         for _, cell in engine.cells.items():
