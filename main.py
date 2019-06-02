@@ -69,13 +69,21 @@ def draw_progress_bar(screen, cell):
         (cell.position, (60 * cell.get_progress(), 5)))
 
 
-def splash_screen():
+def splash_screen(screen, clock):
+    screen.blit(get_image('new/splash_screen.png'), (0,0))
+    pygame.display.flip()
+    for n in range(270):
+        clock.tick()
     return
 
 
 def __main__():
+<<<<<<< HEAD
     splash_screen()
 
+=======
+    
+>>>>>>> 50c00ce6f943abdeca1dbe696d2c6aa94f26f7bb
     pre_init(44100, -16, 1, 1024)
     pygame.init()
     pygame.font.init()
@@ -84,6 +92,7 @@ def __main__():
     clock.set_fps_limit(90)
 
     screen = pygame.display.set_mode((600, 600))
+    splash_screen(screen, clock)
     engine = Engine()
     running = True
 
