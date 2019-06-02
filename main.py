@@ -73,7 +73,7 @@ def draw_progress_bar(screen, cell):
 def splash_screen(screen, clock):
     screen.blit(get_image('new/splash_screen.png'), (0,0))
     pygame.display.flip()
-    for n in range(270):
+    for n in range(135):
         clock.tick()
     return
 
