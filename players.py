@@ -22,6 +22,7 @@ class Player():
         headings: list [HeadingEnums, ...]
         """
         self.score = 0
+        self.energy = 300
         self.position = position
         self._size = size
         self.headings = headings
@@ -192,10 +193,9 @@ class Capitalist(Player):
 
     def action(self, cells, target_grid_refs):
         for grid_ref in target_grid_refs:
-            capitalise_cell(cells, grid_ref)
-
-    def killed_socialist(self):
-        self.score += 100
+            if self.energy > 150:
+                if capitalise_cell(cells, grid_ref):
+                    self.energy -= 150
 
 
 class Socialist(Player):
@@ -209,7 +209,10 @@ class Socialist(Player):
 
     def action(self, cells, target_grid_refs):
         for grid_ref in target_grid_refs:
-            socialise_cell(cells, grid_ref)
+            if self.energy > 100:
+                if socialise_cell(cells, grid_ref):
+                    self.energy -= 100
+                
 
     def killed(self):
         """ return to one of the hospitals """
