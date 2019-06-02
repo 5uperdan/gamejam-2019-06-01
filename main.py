@@ -5,6 +5,7 @@ from engine import Engine
 from sound import Tune
 from controls import get_inputs
 from gameobjects import Road_Cell, Neutral_Cell, Capitalist_Cell, Socialist_Cell
+from pygame.mixer import Sound, get_init, pre_init
 
 _image_library = {}
 
@@ -69,6 +70,7 @@ def draw_progress_bar(screen, cell):
 
 
 def __main__():
+    pre_init(44100, -16, 1, 1024)
     pygame.init()
     pygame.mouse.set_visible(0)
     clock = pyglet.clock.Clock()
@@ -83,58 +85,56 @@ def __main__():
     engine_and_draw_loop_count = 0
     
     while running:
-        
         # playing the background melody in two keys
         if melody_loop_count == 0:
             tune.play('a')
-        if melody_loop_count == 1110:
-            tune.play('b')
-        if melody_loop_count >= 2220:
-            melody_loop_count = 0
-        else:
-            melody_loop_count += 1
-        
+        #elif melody_loop_count == 1110:
+        #    tune.play('b')
+        #elif melody_loop_count >= 2220:
+        #    melody_loop_count = 0
+
         Tune.tick()
+        melody_loop_count += 1
+        engine_and_draw_loop_count += 1
+        clock.tick()
+
+        if engine_and_draw_loop_count != 2:
+            continue
+
+        engine_and_draw_loop_count = 0
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+    
+        screen.fill((255, 255, 255))
+
+        pressed = pygame.key.get_pressed()
+        p1_inputs, p2_inputs = get_inputs(pressed)
+
+        engine.tick(p1_inputs, p2_inputs)
         
-        if engine_and_draw_loop_count == 0:
-            
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-        
-            screen.fill((255, 255, 255))
+        # draw cells
+        for _, cell in engine.cells.items():
+            if type(cell) is Road_Cell:
+                screen.blit(get_image('test/road.png'), cell.position)
+            elif type(cell) is Neutral_Cell:
+                screen.blit(get_image('test/neutral.png'), cell.position)
+            elif type(cell) is Capitalist_Cell:
+                screen.blit(get_image('test/capitalist.png'), cell.position)
+                draw_progress_bar(screen, cell)
+            elif type(cell) is Socialist_Cell:
+                screen.blit(get_image('test/socialist.png'), cell.position)
+                draw_progress_bar(screen, cell)
+            else:
+                continue
 
-            pressed = pygame.key.get_pressed()
-            p1_inputs, p2_inputs = get_inputs(pressed)
+        # draw players
+        screen.blit(get_image('car_down.png'), engine.capitalist.position)
+        screen.blit(get_image('bike_down_1.png'), engine.socialist.position)
 
-            engine.tick(p1_inputs, p2_inputs)
-            
-            # draw cells
-            for _, cell in engine.cells.items():
-                if type(cell) is Road_Cell:
-                    screen.blit(get_image('test/road.png'), cell.position)
-                elif type(cell) is Neutral_Cell:
-                    screen.blit(get_image('test/neutral.png'), cell.position)
-                elif type(cell) is Capitalist_Cell:
-                    screen.blit(get_image('test/capitalist.png'), cell.position)
-                    draw_progress_bar(screen, cell)
-                elif type(cell) is Socialist_Cell:
-                    screen.blit(get_image('test/socialist.png'), cell.position)
-                    draw_progress_bar(screen, cell)
-                else:
-                    continue
-
-            # draw players
-            screen.blit(get_image('car_down.png'), engine.capitalist.position)
-            screen.blit(get_image('bike_down_1.png'), engine.socialist.position)
-
-            # updates game screen
-            pygame.display.flip()
-            clock.tick()
-        
-        if engine_and_draw_loop_count >= 2:
-            engine_and_draw_loop_count = 0
-
+        # updates game screen
+        pygame.display.flip()
 
     pygame.quit()
     return True
