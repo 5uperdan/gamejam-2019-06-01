@@ -11,15 +11,8 @@ class Engine():
         """ Setup game engine """
         # load level
         self.cells = {}
-        for x in range(10):
-            for y in range(10):
-                self.cells[(x, y)] = Neutral_Cell((x, y))
 
-        self.cells[(2, 7)] = Socialist_Cell((2, 7))
-        self.cells[(2, 2)] = Socialist_Cell((2, 2))
-        self.cells[(7, 2)] = Socialist_Cell((7, 2))
-        self.cells[(3, 3)] = Road_Cell((3, 3))
-        self.cells[(5, 5)] = Capitalist_Cell((5, 5))
+        load_level(self.cells)
 
         Engine.build_boundary(self.cells)
         
@@ -72,8 +65,8 @@ class Engine():
         for reference, cell in self.cells.items():
             cell.tick()
 
-        print(self.capitalist.rect)
-        print(self.cells[(2, 2)].rect)
-        print(self.capitalist.rect.colliderect(self.cells[(2, 2)].rect))
-        print(self.cells[(2, 2)].is_navigable)
-        
+def load_level(cells):
+    for grid in [(0, 0)]:
+        self.cells[grid] = Socialist_Cell(grid)
+    for grid in [(0, 1), (0, 5), (0, 7)]:
+        self.cells[grid] = Road_Cell(grid)
