@@ -56,6 +56,33 @@ tune.pauses = [0.8, 0.8, 0.8, 1.6, 1.6, 0.8, 6.0,
                0.8, 0.8, 0.8, 1.6, 1.6, 0.8, 3.0, 3.0]
 tune.speed = 6.0
 
+tune_alt1 = Tune()
+
+tune_alt2 = Tune()
+
+tune_alt1.sequence_a = [
+    'c2n', 'b2n', 'a2n', 'g1n',
+    'b2n', 'a2n', 'g1n', 'f1n',
+    'a2n', 'g1n', 'f1n', 'e1n',
+    'g1n'
+    ]
+
+tune_alt2.sequence_a = [
+    'c1n', 'd1n', 'e1n', 'f1n',
+    'd1n', 'e1n', 'f1n', 'g1n',
+    'e1n', 'f1n', 'g1n', 'a2n',
+    'c2n'
+    ]
+
+tune_alt1.lengths = tune_alt2.lengths = [
+    1.2, 1.2, 1.2, 1.2,
+    1.2, 1.2, 1.2, 1.2,
+    1.2, 1.2, 1.2, 1.2,
+    4.8
+]
+tune_alt1.pauses = tune_alt2.pauses = tune_alt1.lengths
+tune_alt1.speed = tune_alt2.speed = 5.0
+
 def draw_progress_bar(screen, cell):
     if cell.is_complete:
         colour = GREEN
@@ -97,12 +124,14 @@ def __main__():
     while running:
         # playing the background melody in two keys
         if melody_loop_count == 0:
-            tune.play('a')
+            tune_alt1.play('a')
+            tune_alt2.play('a')
         elif melody_loop_count == 1150:
-            tune.play('b')
+            tune_alt.play('b')
         elif melody_loop_count >= 2300:
             melody_loop_count = -1
-        Tune.tick()
+        tune_alt1.tick()
+        tune_alt2.tick()
         melody_loop_count += 1
         clock.tick()
 
