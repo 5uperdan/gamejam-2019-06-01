@@ -41,10 +41,26 @@ class Engine():
             for y in (-1, 10):
                 cells[(x, y)] = Cell((x, y), is_navigable=False)
 
-
     def tick(self, p1_inputs, p2_inputs):
         """ Progresses the game one tick forward """
+        self.tick_objects(p1_inputs, p2_inputs)
 
+        # collisions between players
+        if self.capitalist.rect.colliderect(self.socialist.rect):
+            self.socialist.killed()
+            self.capitalist.score += 200
+
+        # check for win conditions
+        if self.capitalist.score >= 1000:
+            return GameState.CAPITALIST_WIN
+
+        if self.socialist.score >= 1000:
+            return GameState.SOCIALIST_WIN
+
+        return GameState.RUNNING
+
+    def tick_objects(self, p1_inputs, p2_inputs):
+        """ Calls tick on the gameplay objects """
         self.capitalist.tick(
             inputs=p1_inputs,
             cells=self.cells,
@@ -55,20 +71,9 @@ class Engine():
             cells=self.cells,
             opponent_grid_ref=self.capitalist.get_grid_ref())
 
-        if self.capitalist.rect.colliderect(self.socialist.rect):
-            self.socialist.killed()
-            self.capitalist.score += 200
-
         for reference, cell in self.cells.items():
             cell.tick(self.capitalist, self.socialist)
 
-        if self.capitalist.score >= 1000:
-            return GameState.CAPITALIST_WIN
-
-        if self.socialist.score >= 1000:
-            return GameState.SOCIALIST_WIN
-
-        return GameState.RUNNING
 
 def load_level(cells):
     for grid in [(0, 0), (6, 6)]:
