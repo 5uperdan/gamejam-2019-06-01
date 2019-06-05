@@ -4,6 +4,8 @@ This is a game made at a gamejam.
 
 ## Plans for improvements
 
+- controller support
+
 - fix game loop, splash screen and win screen
 	- leave splash screen on keypress "press any key to start"
 	- keep game state on win, print text over the top
