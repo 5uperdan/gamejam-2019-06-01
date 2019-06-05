@@ -148,14 +148,15 @@ def run_game():
     clock.set_fps_limit(30)
 
     # screen parameters
-    screen = pygame.display.set_mode((600, 600))  #, pygame.FULLSCREEN)
-    
+    screen = pygame.display.set_mode((640, 640))
+    gameplay_surface = pygame.Surface((600, 600))
+
     # create game engine
     engine = Engine()
 
     melody_tick_count = 0
     running = True
-    
+
     # main game loop
     while running:
         melody_tick_count += 1
@@ -186,50 +187,53 @@ def run_game():
         if game_state != GameState.RUNNING:
             return game_state
 
-        # clear screen
-        screen.fill((0, 0, 0))
+        # clear gameplay surface
+        gameplay_surface.fill((0, 0, 0))
 
         # draw cells
         for _, cell in engine.cells.items():
             if type(cell) is Road_Cell:
-                screen.blit(get_image('new/road_blank.png'), cell.position)
+                gameplay_surface.blit(get_image('new/road_blank.png'), cell.position)
             elif type(cell) is Rock_Cell:
-                screen.blit(get_image('new/road_blank.png'), cell.position)
-                screen.blit(get_image('new/rock.png'), cell.position)
+                gameplay_surface.blit(get_image('new/road_blank.png'), cell.position)
+                gameplay_surface.blit(get_image('new/rock.png'), cell.position)
             elif type(cell) is Capitalist_Cell:
-                screen.blit(get_image('new/neutral.png'), cell.position)
-                screen.blit(get_image('new/office.png'), cell.position)
-                draw_progress_bar(screen, cell)
+                gameplay_surface.blit(get_image('new/neutral.png'), cell.position)
+                gameplay_surface.blit(get_image('new/office.png'), cell.position)
+                draw_progress_bar(gameplay_surface, cell)
             elif type(cell) is Socialist_Cell:
-                screen.blit(get_image('new/park-lake.png'), cell.position)
-                draw_progress_bar(screen, cell)
+                gameplay_surface.blit(get_image('new/park-lake.png'), cell.position)
+                draw_progress_bar(gameplay_surface, cell)
             elif type(cell) is Neutral_Cell:
-                screen.blit(get_image('new/neutral.png'), cell.position)
+                gameplay_surface.blit(get_image('new/neutral.png'), cell.position)
             else:
                 continue
 
         # draw players
-        screen.blit(get_image('new/car.png'), engine.capitalist.position)
-        screen.blit(get_image('bike_down_1.png'), engine.socialist.position)
+        gameplay_surface.blit(get_image('new/car.png'), engine.capitalist.position)
+        gameplay_surface.blit(get_image('bike_down_1.png'), engine.socialist.position)
 
         # draw energy meters
         pygame.draw.rect(
-            screen,
+            gameplay_surface,
             GREEN,
             (engine.capitalist.position, (30 * engine.capitalist.energy_bar, 5)))
 
         pygame.draw.rect(
-            screen,
+            gameplay_surface,
             GREEN,
             ((engine.socialist.position[0] - 15, engine.socialist.position[1]), (30 * engine.socialist.energy_bar, 5)))
 
         # draw scores
         myfont = pygame.font.SysFont('Comic Sans MS', 20)
         capitalist_score_text = myfont.render('Capitalism: ' + str(engine.capitalist.score), False, (0, 255, 0))
-        screen.blit(capitalist_score_text, (15, 15))
+        gameplay_surface.blit(capitalist_score_text, (15, 15))
 
         socialist_score_text = myfont.render('Socialism: ' + str(engine.socialist.score), False, (255, 0, 0))
-        screen.blit(socialist_score_text, (15, 45))
+        gameplay_surface.blit(socialist_score_text, (15, 45))
+
+        # add gameplay surface to screen
+        screen.blit(gameplay_surface, (20, 20))
 
         # updates game screen
         pygame.display.flip()
