@@ -73,7 +73,7 @@ def draw_progress_bar(screen, cell):
 def splash_screen(screen, clock):
     screen.blit(get_image('new/splash_screen.png'), (0,0))
     pygame.display.flip()
-    for n in range(135):
+    for n in range(10):
         clock.tick()
     return
 
@@ -141,8 +141,10 @@ def __main__():
             if type(cell) is Road_Cell:
                 screen.blit(get_image('new/road_blank.png'), cell.position)
             elif type(cell) is Rock_Cell:
+                screen.blit(get_image('new/road_blank.png'), cell.position)
                 screen.blit(get_image('new/rock.png'), cell.position)
             elif type(cell) is Capitalist_Cell:
+                screen.blit(get_image('new/neutral.png'), cell.position)
                 screen.blit(get_image('new/office.png'), cell.position)
                 draw_progress_bar(screen, cell)
             elif type(cell) is Socialist_Cell:
