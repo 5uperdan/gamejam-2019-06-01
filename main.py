@@ -111,6 +111,8 @@ def splash_screen():
                 return pygame.key.get_pressed()
 
 def draw_winning_team(winning_team):
+    screen = pygame.display.set_mode((600, 600))  #, pygame.FULLSCREEN)
+
     myfont = pygame.font.SysFont('Comic Sans MS', 35)
     text = 'The {} state has been knocked down!'.format(
         'capitalist' if winning_team == GameState.SOCIALIST_WIN else 'socialist'
@@ -123,6 +125,11 @@ def draw_winning_team(winning_team):
     
     screen.blit(text, (15, 15))
     pygame.display.flip()
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                return pygame.key.get_pressed()
 
 
 def initialise():

@@ -62,11 +62,11 @@ class Engine():
         for reference, cell in self.cells.items():
             cell.tick(self.capitalist, self.socialist)
 
-        if self.capitalist.score >= 12500:
-            GameState.CAPITALIST_WIN
+        if self.capitalist.score >= 1000:
+            return GameState.CAPITALIST_WIN
 
-        if self.socialist.score >= 12500:
-            GameState.SOCIALIST_WIN
+        if self.socialist.score >= 1000:
+            return GameState.SOCIALIST_WIN
 
         return GameState.RUNNING
 
