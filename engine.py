@@ -41,9 +41,19 @@ class Engine():
             for y in (-1, 10):
                 cells[(x, y)] = Cell((x, y), is_navigable=False)
 
-    def tick(self, p1_inputs, p2_inputs):
+    def tick(self, p1_inputs, p2_inputs, p3_inputs=None, p4_inputs=None):
         """ Progresses the game one tick forward """
+        # TODO
+        # handle action button requests
+        # we do this first because we don't want to
+        # update the player's location and potentially change the target cell
+        # without redrawing the target first
+
         self.tick_objects(p1_inputs, p2_inputs)
+
+        # TODO
+        # collisions between players and environment
+
 
         # collisions between players
         if self.capitalist.rect.colliderect(self.socialist.rect):
@@ -76,6 +86,7 @@ class Engine():
 
 
 def load_level(cells):
+    """ fills dictionary with cells """
     for grid in [(0, 0), (6, 6)]:
         cells[grid] = Socialist_Cell(grid)
     for grid in [(9, 5), (2, 8)]:

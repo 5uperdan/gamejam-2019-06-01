@@ -41,6 +41,7 @@ class Player():
 
     @property
     def rect(self):
+        """ returns a rect corresponding to the player object """
         return pygame.Rect(self.position, self._size)
 
     def get_centre(self):
@@ -175,6 +176,7 @@ class Player():
                     self.position[1] = cell.position[1] + cell._size[1]
 
     def tick(self, inputs, cells, opponent_grid_ref):
+        """ Processes one tick for the player """
         if self.energy < Player.MAX_ENERGY:
             self.energy += 0.5
 
@@ -220,7 +222,6 @@ class Socialist(Player):
             if self.energy > 100:
                 if socialise_cell(cells, grid_ref):
                     self.energy -= 100
-                
 
     def killed(self):
         """ return to one of the hospitals """
