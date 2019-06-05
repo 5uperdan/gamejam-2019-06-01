@@ -13,6 +13,11 @@ class Headings(Enum):
     West = 3
 
 
+class Team(Enum):
+    Capitalist = 0,
+    Socialist = 0
+
+
 class Player():
     """ represents a player """
     MAX_ENERGY = 300

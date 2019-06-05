@@ -2,6 +2,14 @@ from gameobjects import (Cell, Road_Cell, Rock_Cell, Capturable_Cell,
                          Capitalist_Cell, Socialist_Cell, Neutral_Cell)
 from players import Capitalist, Socialist
 import random
+from enum import Enum
+
+
+class GameState(Enum):
+    QUIT = 0
+    CAPITALIST_WIN = 1
+    SOCIALIST_WIN = 2
+    RUNNING = 3
 
 
 class Engine():
@@ -55,12 +63,12 @@ class Engine():
             cell.tick(self.capitalist, self.socialist)
 
         if self.capitalist.score >= 12500:
-            return 'c'
+            GameState.CAPITALIST_WIN
 
         if self.socialist.score >= 12500:
-            return 's'
+            GameState.SOCIALIST_WIN
 
-        return ''
+        return GameState.RUNNING
 
 def load_level(cells):
     for grid in [(0, 0), (6, 6)]:
