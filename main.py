@@ -7,7 +7,7 @@ from controls import get_inputs
 from gameobjects import Road_Cell, Rock_Cell, Capitalist_Cell, Socialist_Cell, Neutral_Cell
 from pygame.mixer import Sound, get_init, pre_init
 import time
-from players import Team
+from game_enums import Team
 
 
 _image_library = {}
@@ -191,7 +191,7 @@ def run_game():
         gameplay_surface.fill((0, 0, 0))
 
         # draw cells
-        for _, cell in engine.cells.items():
+        for _, cell in engine.cell_handler.cells.items():
             if type(cell) is Road_Cell:
                 gameplay_surface.blit(get_image('new/road_blank.png'), cell.position)
             elif type(cell) is Rock_Cell:
@@ -209,28 +209,18 @@ def run_game():
             else:
                 continue
 
-        # draw players
-        gameplay_surface.blit(get_image('new/car.png'), engine.capitalist.position)
-        gameplay_surface.blit(get_image('bike_down_1.png'), engine.socialist.position)
-
-        # draw energy meters
-        pygame.draw.rect(
-            gameplay_surface,
-            GREEN,
-            (engine.capitalist.position, (30 * engine.capitalist.energy_bar, 5)))
-
-        pygame.draw.rect(
-            gameplay_surface,
-            GREEN,
-            ((engine.socialist.position[0] - 15, engine.socialist.position[1]), (30 * engine.socialist.energy_bar, 5)))
+        # draw players, action highlights & energy meters
+        for capitalist in engine.capitalists:
+            gameplay_surface.blit(get_image('new/car.png'), capitalist.position)
+            pygame.draw.rect(
+                gameplay_surface,
+                GREEN,
+                (capitalist.position, (30 * capitalist.energy_bar, 5)))
+        
+        for socialist in engine.socialists:
+            gameplay_surface.blit(get_image('bike_down_1.png'), socialist.position)
 
         # draw scores
-        myfont = pygame.font.SysFont('Comic Sans MS', 20)
-        capitalist_score_text = myfont.render('Capitalism: ' + str(engine.capitalist.score), False, (0, 255, 0))
-        gameplay_surface.blit(capitalist_score_text, (15, 15))
-
-        socialist_score_text = myfont.render('Socialism: ' + str(engine.socialist.score), False, (255, 0, 0))
-        gameplay_surface.blit(socialist_score_text, (15, 45))
 
         # add gameplay surface to screen
         screen.blit(gameplay_surface, (20, 20))

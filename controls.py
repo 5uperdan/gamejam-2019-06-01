@@ -1,14 +1,5 @@
-from enum import Enum
 import pygame
-
-
-class Inputs(Enum):
-    UP = 0
-    RIGHT = 1
-    DOWN = 2
-    LEFT = 3
-    ACTION = 4
-
+from game_enums import Inputs
 
 def get_inputs(pressed):
     """ Converts pygame inputs to game inputs """

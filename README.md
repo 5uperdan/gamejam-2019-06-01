@@ -25,6 +25,7 @@ This is a game made at a gamejam.
 - art assets
 	- bike to become 30x30
 	- animations, fade in based on progress bar
+	- draw images based on heading
 	
 - better random bike spawn, not near car
 
