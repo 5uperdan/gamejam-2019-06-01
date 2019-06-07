@@ -38,7 +38,7 @@ class Player():
                 self.position[1] + self._size[1] // 2)
 
     @property
-    def grid_ref(self):
+    def grid(self):
         """ returns the tuple grid location of the centre of the player """
         centre_of_player = self.centre
         return (math.floor(centre_of_player[0] / 60),
@@ -100,19 +100,22 @@ class Player():
 
         self._damp(damp_x, damp_y)
 
-    def correct_for_collision(self, player_grid_ref, object_grid_ref):
-        """ corrects player's position after collision with object """
-        if object_grid_ref.grid[0] > player_grid_ref[0]:  # push left
-            self.position[0] = object_grid_ref.position[0] - player._size[0]
+    def correct_for_collision(self, player_grid, obj):
+        """ corrects player's position after collision with object
+            player_grid: (x,y)
+            object: object that player has collided with
+        """
+        if obj.grid[0] > player_grid[0]:  # push left
+            self.position[0] = obj.position[0] - self._size[0]
             self._velocity[0] = 0
-        if object_grid_ref.grid[0] < player_grid_ref[0]:  # push right
-            self.position[0] = object_grid_ref.position[0] + object_grid_ref._size[0]
+        if obj.grid[0] < player_grid[0]:  # push right
+            self.position[0] = obj.position[0] + obj._size[0]
             self._velocity[0] = 0
-        if object_grid_ref.grid[1] > player_grid_ref[1]:  # push up
-            self.position[1] = object_grid_ref.position[1] - player._size[1]
+        if obj.grid[1] > player_grid[1]:  # push up
+            self.position[1] = obj.position[1] - self._size[1]
             self._velocity[1] = 0
-        if object_grid_ref.grid[1] < player_grid_ref[1]:  # push down
-            self.position[1] = object_grid_ref.position[1] + object_grid_ref._size[1]
+        if obj.grid[1] < player_grid[1]:  # push down
+            self.position[1] = obj.position[1] + obj._size[1]
             self._velocity[1] = 0
         self._damp()
 

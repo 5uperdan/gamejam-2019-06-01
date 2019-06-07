@@ -5,13 +5,13 @@ from game_enums import Team
 
 
 class Cell():
-    def __init__(self, grid_ref):
+    def __init__(self, grid):
         """
-        grid: tuple of grid_ref location (x, y)
+        grid: tuple of grid location (x, y)
         """
-        self.grid = grid_ref
+        self.grid = grid
         self._size = (60, 60)
-        self.position = (grid_ref[0] * 60, grid_ref[1] * 60)
+        self.position = (grid[0] * 60, grid[1] * 60)
         self.rect = Rect(self.position, self._size)
 
     def is_navigable(self, player_team):
@@ -22,37 +22,37 @@ class Cell():
 
 
 class Road_Cell(Cell):
-    def __init__(self, grid_ref):
-        super().__init__(grid_ref)
+    def __init__(self, grid):
+        super().__init__(grid)
 
     def is_navigable(self, player_team):
         return True
 
 
 class Rock_Cell(Cell):
-    def __init__(self, grid_ref):
-        super().__init__(grid_ref)
+    def __init__(self, grid):
+        super().__init__(grid)
 
     def is_navigable(self, player_team):
         return False
 
 
 class Neutral_Cell(Cell):
-    def __init__(self, grid_ref):
-        super().__init__(grid_ref)
+    def __init__(self, grid):
+        super().__init__(grid)
 
     def is_navigable(self, player_team):
         return True
 
 
 class Captured_Cell(Cell):
-    def __init__(self, grid_ref, goal):
+    def __init__(self, grid, goal):
         self.progress = 0
         self.goal = goal
         self.is_complete = False
         self.is_hindered = False
 
-        super().__init__(grid_ref)
+        super().__init__(grid)
 
     def is_navigable(self, player_team):
         """ shouldn't be called """
@@ -76,8 +76,8 @@ class Captured_Cell(Cell):
 
 
 class Capitalist_Cell(Captured_Cell):
-    def __init__(self, grid_ref):
-        super().__init__(grid_ref, goal=2000)
+    def __init__(self, grid):
+        super().__init__(grid, goal=2000)
 
     def tick(self):
         super().tick()
@@ -87,8 +87,8 @@ class Capitalist_Cell(Captured_Cell):
 
 
 class Socialist_Cell(Captured_Cell):
-    def __init__(self, grid_ref):
-        super().__init__(grid_ref, goal=1000)
+    def __init__(self, grid):
+        super().__init__(grid, goal=1000)
 
     def tick(self):
         super().tick()

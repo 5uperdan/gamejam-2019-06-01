@@ -18,82 +18,82 @@ class Cell_Handler():
         for _, cell in self.cells.items():
             cell.tick()
 
-    def get_target_grid_refs(grid_ref, headings):
+    def get_target_grids(grid, headings):
         """ returns a list of grid refs of the adjacent cells in the
             direction of the headings """
-        adjacent_grid_refs = []
+        adjacent_grids = []
 
         if Headings.North in headings:
-            adjacent_grid_refs.append((player_grid_ref[0], player_grid_ref[1] - 1))
+            adjacent_grids.append((player_grid[0], player_grid[1] - 1))
         if Headings.East in headings:
-            adjacent_grid_refs.append((player_grid_ref[0] + 1, player_grid_ref[1]))
+            adjacent_grids.append((player_grid[0] + 1, player_grid[1]))
         if Headings.South in headings:
-            adjacent_grid_refs.append((player_grid_ref[0], player_grid_ref[1] + 1))
+            adjacent_grids.append((player_grid[0], player_grid[1] + 1))
         if Headings.West in headings:
-            adjacent_grid_refs.append((player_grid_ref[0] - 1, player_grid_ref[1]))
+            adjacent_grids.append((player_grid[0] - 1, player_grid[1]))
 
-        return adjacent_grid_refs
+        return adjacent_grids
 
     @staticmethod
-    def get_surrounding_grid_refs(grid_ref):
+    def get_surrounding_grids(grid):
         """ Returns a list of tuples [(x,y) ...]
             which are the surrounding grid refs """
         surrounding_grids = []
         for x in (-1, 0, 1):
             for y in (-1, 0, 1):
                 if (x, y) != (0, 0):
-                    surrounding_grids.append((grid_ref[0] + x, grid_ref[1] + y))
+                    surrounding_grids.append((grid[0] + x, grid[1] + y))
         return surrounding_grids
 
-    def get_surrounding_unnavigable_cells(self, grid_ref, player_team):
-        """ returns a list of cells surrounding the grid_ref
+    def get_surrounding_unnavigable_cells(self, grid, player_team):
+        """ returns a list of cells surrounding the grid
             and are unnavigable
-            grid_ref: tuple
+            grid: tuple
             player_team: Team(Enum)
         """
-        surrounding_grids = Cell_Handler.get_surrounding_grid_refs(grid_ref)
+        surrounding_grids = Cell_Handler.get_surrounding_grids(grid)
         unnav_sur_cells = []
-        for cell in unnav_sur_cells:
-            candidate_cell = self.cells[candidate_grid_ref]
+        for grid in surrounding_grids:
+            candidate_cell = self.cells[grid]
 
             if not candidate_cell.is_navigable(player_team):
-                surrounding_cells.append(candidate_cell)
+                unnav_sur_cells.append(candidate_cell)
         return unnav_sur_cells
 
-    def action_cell(grid_ref, player_team):
+    def action_cell(grid, player_team):
         """ Actions a cell """
         if player_team == Team.Capitalist:
-            _capitalise_cell(grid_ref)
+            _capitalise_cell(grid)
         else:  # player_team == Team.Socialist:
-            _socialise_cell(grid_ref)
+            _socialise_cell(grid)
 
-    def _capitalise_cell(grid_ref):
+    def _capitalise_cell(grid):
         """ capitalist player has actioned cell,
         returns True if energy was spent """
-        cell = self.cells.get(target_grid_ref, None)
+        cell = self.cells.get(target_grid, None)
         if cell is None:
             return False
 
         if type(cell) is Capitalist_Cell:
             return False
         if type(cell) is Neutral_Cell:
-            cells[target_grid_ref] = Capitalist_Cell(target_grid_ref)
+            cells[target_grid] = Capitalist_Cell(target_grid)
             return True
         if type(cell) is Socialist_Cell:
             cell.is_hindered = True
             return True
 
-    def _socialise_cell(grid_ref):
+    def _socialise_cell(grid):
         """ capitalisation player has actioned cell,
         returns True if energy was spent """
-        cell = self.cells.get(target_grid_ref, None)
+        cell = self.cells.get(target_grid, None)
         if cell is None:
             return False
 
         if type(cell) is Socialist_Cell:
             return False
         if type(cell) is Neutral_Cell:
-            cells[target_grid_ref] = Socialist_Cell(target_grid_ref)
+            cells[target_grid] = Socialist_Cell(target_grid)
             return True
         if type(cell) is Capitalist_Cell:
             cell.is_hindered = True

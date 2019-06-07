@@ -1,8 +1,8 @@
 
 
-def get_players_grid_refs(players):
+def get_players_grids(players):
     """ Returns a list of players' currently occupied grid refs """
-    grid_refs = []
+    grids = []
     for player in players:
-        grid_refs.append(player.get_grid_ref())
-    return grid_refs
+        grids.append(player.get_grid())
+    return grids
