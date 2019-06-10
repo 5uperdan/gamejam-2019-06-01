@@ -4,22 +4,28 @@ import math
 from random import choice
 from game_enums import Headings, Team
 
+
 class Player():
     """ represents a player """
     MAX_ENERGY = 300
+
     def __init__(self, position, size, headings, max_speed, team):
         """
         position: list [x,y]
+        size: tuple (width, height)
         headings: list [HeadingEnums, ...]
+        max_speed: int
+        team: Team enum
         """
-        self.score = 0
-        self.energy = 300
         self.position = position
         self._size = size
         self.headings = headings
-        self._velocity = [0, 0]
         self.MAX_SPEED = max_speed
         self.team = team
+
+        self.energy = 300
+        self._velocity = [0, 0]
+        self.target = None
 
     @property
     def energy_bar(self):
@@ -43,6 +49,12 @@ class Player():
         centre_of_player = self.centre
         return (math.floor(centre_of_player[0] / 60),
                 math.floor(centre_of_player[1] / 60))
+
+    @property
+    def position_in_cell(self):
+        """ returns the players relative position within a cell """
+        centre_of_player = self.centre
+        return centre_of_player[0] % 60, centre_of_player[1] % 60
 
     def _damp(self, damp_x=True, damp_y=True):
         """ Decelerates x and y axis movement """
@@ -73,6 +85,7 @@ class Player():
             self._velocity[1] = - self.MAX_SPEED
 
     def _handle_movement_inputs(self, inputs):
+        """ Accelerates player """
         damp_x = True
         damp_y = True
 
@@ -100,6 +113,10 @@ class Player():
 
         self._damp(damp_x, damp_y)
 
+    def set_target(self, grid):
+        """ Sets the target grid """
+        self.target = grid
+
     def correct_for_collision(self, player_grid, obj):
         """ corrects player's position after collision with object
             player_grid: (x,y)
@@ -118,7 +135,6 @@ class Player():
             self.position[1] = obj.position[1] + obj._size[1]
             self._velocity[1] = 0
         self._damp()
-
 
     def tick(self, inputs):
         """ Processes one tick for the player """

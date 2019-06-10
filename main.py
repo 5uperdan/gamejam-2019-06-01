@@ -1,4 +1,8 @@
 import os
+# hide the pygame console message
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
+
+import pygame
 import pygame
 import pyglet
 from engine import Engine, GameState
@@ -110,6 +114,7 @@ def splash_screen():
             if event.type == pygame.KEYDOWN:
                 return pygame.key.get_pressed()
 
+
 def draw_winning_team(winning_team):
     screen = pygame.display.set_mode((600, 600))  #, pygame.FULLSCREEN)
 
@@ -122,7 +127,7 @@ def draw_winning_team(winning_team):
         'The capitalist state has been knocked down!: ',
         False,
         (0, 255, 0))
-    
+
     screen.blit(text, (15, 15))
     pygame.display.flip()
 
@@ -216,9 +221,33 @@ def run_game():
                 gameplay_surface,
                 GREEN,
                 (capitalist.position, (30 * capitalist.energy_bar, 5)))
+
+            if capitalist.target is not None:
+                targetted_cell = engine.cell_handler.cells[capitalist.target]
+                if type(targetted_cell) is Neutral_Cell:
+                    pygame.draw.rect(
+                        gameplay_surface,
+                        GREEN,
+                        (targetted_cell.position, (60, 60)),
+                        3)  # width of line
+                
         
         for socialist in engine.socialists:
             gameplay_surface.blit(get_image('bike_down_1.png'), socialist.position)
+            pygame.draw.rect(
+                gameplay_surface,
+                GREEN,
+                (socialist.position, (30 * socialist.energy_bar, 5)))
+
+            if socialist.target is not None:
+                targetted_cell = engine.cell_handler.cells[socialist.target]
+                if type(targetted_cell) is Neutral_Cell:
+                    pygame.draw.rect(
+                        gameplay_surface,
+                        RED,
+                        (targetted_cell.position, (60, 60)),
+                        3)  # width of line
+
 
         # draw scores
 

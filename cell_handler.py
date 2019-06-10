@@ -18,32 +18,48 @@ class Cell_Handler():
         for _, cell in self.cells.items():
             cell.tick()
 
-    def get_target_grids(grid, headings):
-        """ returns a list of grid refs of the adjacent cells in the
-            direction of the headings """
-        adjacent_grids = []
-
-        if Headings.North in headings:
-            adjacent_grids.append((player_grid[0], player_grid[1] - 1))
-        if Headings.East in headings:
-            adjacent_grids.append((player_grid[0] + 1, player_grid[1]))
-        if Headings.South in headings:
-            adjacent_grids.append((player_grid[0], player_grid[1] + 1))
-        if Headings.West in headings:
-            adjacent_grids.append((player_grid[0] - 1, player_grid[1]))
-
-        return adjacent_grids
-
     @staticmethod
-    def get_surrounding_grids(grid):
+    def get_surrounding_grids(grid, include_occupied=False):
         """ Returns a list of tuples [(x,y) ...]
-            which are the surrounding grid refs """
+            which are the surrounding grid refs.
+            If include_occupied is True then the occupied grid is included
+            in the list.
+            """
         surrounding_grids = []
         for x in (-1, 0, 1):
             for y in (-1, 0, 1):
-                if (x, y) != (0, 0):
+                if (x, y) != (0, 0) or include_occupied:
                     surrounding_grids.append((grid[0] + x, grid[1] + y))
         return surrounding_grids
+
+    def get_actionable_grid(self, p_grid, p_centre):
+        """ Returns the grid location of the closest actionable grid
+            If there is no actionable grid in range, returns None.
+            Args:
+                p_grid: player's grid
+                p_centre: position of player's centre point
+        """
+        surrounding_grids = Cell_Handler.get_surrounding_grids(p_grid)
+        player_x, player_y = p_centre
+        min_sq_dist = 1_000_000  # any cell should be less distance away
+        min_grid = None
+
+        # skip over surrounding grids that are not actionable
+        for grid in surrounding_grids:
+            candidate_cell = self.cells[grid]
+            if type(candidate_cell) is not Neutral_Cell:
+                continue
+
+            # calculate distance between player centre and cell centre
+            cell_x, cell_y = candidate_cell.centre
+            sq_distance = (player_x - cell_x) ** 2 + (player_y - cell_y) ** 2
+
+            # keep track of closest one
+            if sq_distance < min_sq_dist:
+                min_sq_dist = sq_distance
+                min_grid = grid
+
+        return min_grid
 
     def get_surrounding_unnavigable_cells(self, grid, player_team):
         """ returns a list of cells surrounding the grid

@@ -14,6 +14,12 @@ class Cell():
         self.position = (grid[0] * 60, grid[1] * 60)
         self.rect = Rect(self.position, self._size)
 
+    @property
+    def centre(self):
+        """ returns centre position """
+        return (self.position[0] + self._size[0] // 2,
+                self.position[1] + self._size[1] // 2)
+
     def is_navigable(self, player_team):
         return False
 

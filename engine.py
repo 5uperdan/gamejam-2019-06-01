@@ -1,7 +1,7 @@
 from players import Capitalist, Socialist
 import random
 from cell_handler import Cell_Handler
-from game_enums import GameState, Inputs
+from game_enums import GameState, Inputs, Team
 
 
 class Engine():
@@ -14,6 +14,7 @@ class Engine():
         self.socialists = [Socialist([75, 75])]
         self.capitalists = [Capitalist([550, 75])]
         self.players = self.socialists + self.capitalists
+        self.scores = {Team.Capitalist: 0, Team.Socialist: 0}
 
     def tick(self, p1_inputs, p2_inputs, p3_inputs=None, p4_inputs=None):
         """ Progresses the game one tick forward """
@@ -47,19 +48,23 @@ class Engine():
             for capitalist in self.capitalists:
                 if socialist.rect.colliderect(capitalist):
                     socialist.killed()
-                    capitalist.score += 200
+                    self.scores[Team.Capitalist] += 500
 
         # collisions between friendly players
         if len(self.socialists) > 1:
             # do something
             pass
 
-        # check for win conditions
-        #if self.capitalist.score >= 1000:
-        #    return GameState.CAPITALIST_WIN
+        # set players' action grid
+        for player in self.players:
+            target = self.cell_handler.get_actionable_grid(player.grid, player.centre)
+            player.set_target(target)
 
-        #if self.socialist.score >= 1000:
-        #    return GameState.SOCIALIST_WIN
+        # check for win conditions
+        if self.scores[Team.Capitalist] >= 1000:
+            return GameState.CAPITALIST_WIN
+        elif self.scores[Team.Socialist] >= 1000:
+            return GameState.SOCIALIST_WIN
 
         return GameState.RUNNING
 
