@@ -101,7 +101,7 @@ def draw_progress_bar(screen, cell):
     pygame.draw.rect(
         screen,
         colour,
-        (cell.position, (60 * cell.get_progress(), 5)))
+        (cell.position, (60 * cell.progress, 5)))
 
 
 def splash_screen():
@@ -224,12 +224,11 @@ def run_game():
 
             if capitalist.target is not None:
                 targetted_cell = engine.cell_handler.cells[capitalist.target]
-                if type(targetted_cell) is Neutral_Cell:
-                    pygame.draw.rect(
-                        gameplay_surface,
-                        GREEN,
-                        (targetted_cell.position, (60, 60)),
-                        3)  # width of line
+                pygame.draw.rect(
+                    gameplay_surface,
+                    GREEN,
+                    (targetted_cell.position, (60, 60)),
+                    3)  # width of line
                 
         
         for socialist in engine.socialists:
@@ -241,12 +240,11 @@ def run_game():
 
             if socialist.target is not None:
                 targetted_cell = engine.cell_handler.cells[socialist.target]
-                if type(targetted_cell) is Neutral_Cell:
-                    pygame.draw.rect(
-                        gameplay_surface,
-                        RED,
-                        (targetted_cell.position, (60, 60)),
-                        3)  # width of line
+                pygame.draw.rect(
+                    gameplay_surface,
+                    RED,
+                    (targetted_cell.position, (60, 60)),
+                    3)  # width of line
 
 
         # draw scores

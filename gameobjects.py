@@ -53,40 +53,46 @@ class Neutral_Cell(Cell):
 
 class Captured_Cell(Cell):
     def __init__(self, grid, goal):
-        self.progress = 0
+        self._progress = 0
         self.goal = goal
         self.is_complete = False
         self.is_hindered = False
 
         super().__init__(grid)
 
+    @property
+    def is_destroyable(self):
+        return self.progress < 0.5
+
+    @property
+    def progress(self):
+        """ returns fraction of completeness (1 is complete) """
+        return self._progress / self.goal
+
     def is_navigable(self, player_team):
         """ shouldn't be called """
         raise NotImplementedError()
 
-    def get_progress(self):
-        """ returns fraction of completeness (1 is complete) """
-        return self.progress / self.goal
-
     def tick(self):
+        """ returns True if type complete """
         if self.is_complete:
-            return
-        if self.is_hindered:
-            self.progress += 1
-        else:
-            self.progress += 2
+            return False
 
-        if self.progress >= self.goal:
-            self.progress = self.goal
+        self._progress += 1
+
+        if self._progress >= self.goal:
+            self._progress = self.goal
             self.is_complete = True
+            return True
+        return False
 
 
 class Capitalist_Cell(Captured_Cell):
     def __init__(self, grid):
-        super().__init__(grid, goal=2000)
+        super().__init__(grid, goal=600)
 
     def tick(self):
-        super().tick()
+        return super().tick()
 
     def is_navigable(self, player_team):
         return False
@@ -94,10 +100,10 @@ class Capitalist_Cell(Captured_Cell):
 
 class Socialist_Cell(Captured_Cell):
     def __init__(self, grid):
-        super().__init__(grid, goal=1000)
+        super().__init__(grid, goal=400)
 
     def tick(self):
-        super().tick()
+        return super().tick()
 
     def is_navigable(self, player_team):
         if player_team == Team.Capitalist:

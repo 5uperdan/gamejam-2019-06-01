@@ -21,12 +21,15 @@ class Engine():
         all_inputs = (p1_inputs, p2_inputs, p3_inputs, p4_inputs)
 
         # get player's starting grid references before they move
-        players_grids = [player.grid for player in self.players]
+        starting_player_grids = [player.grid for player in self.players]
 
         # handle action requests from players
         for player, inputs in zip(self.players, all_inputs):
-            if Inputs.ACTION in inputs:
-                handle_action_input(player)
+            if (Inputs.ACTION in inputs and
+               player.meets_action_requirements):
+                    result = self.cell_handler.action_cell(player.target, player.team)
+                    if result:
+                        player.action_completed()
 
         # apply a tick to each player
         for player, inputs in zip(self.players, all_inputs):
@@ -36,7 +39,7 @@ class Engine():
         self.cell_handler.tick()
 
         # collisions between players and environment
-        for player, p_grid in zip(self.players, players_grids):
+        for player, p_grid in zip(self.players, starting_player_grids):
             unnav_sur_cells = self.cell_handler.get_surrounding_unnavigable_cells(
                 p_grid, player.team)
             for cell in unnav_sur_cells:
@@ -55,9 +58,12 @@ class Engine():
             # do something
             pass
 
-        # set players' action grid
+        # set players' target grid
         for player in self.players:
-            target = self.cell_handler.get_actionable_grid(player.grid, player.centre)
+            target = self.cell_handler.get_actionable_grid(
+                player.grid,
+                player.centre,
+                player.team)
             player.set_target(target)
 
         # check for win conditions
@@ -67,25 +73,3 @@ class Engine():
             return GameState.SOCIALIST_WIN
 
         return GameState.RUNNING
-
-
-    def handle_actions():
-        for grid in target_grids:
-            if self.energy > 150:
-                if capitalise_cell(cells, grid):
-                    self.energy -= 150
-
-        for grid in target_grids:
-            if self.energy > 100:
-                if socialise_cell(cells, grid):
-                    self.energy -= 100
-
-
-    def handle_action_input(self, player_grid, opponent_grid, cells):
-        target_grids = Player.get_target_grids(
-            player_grid,
-            self.headings)
-        if opponent_grid in target_grids:
-            target_grids.remove(opponent_grid)
-
-        self.action(cells, target_grids=target_grids)

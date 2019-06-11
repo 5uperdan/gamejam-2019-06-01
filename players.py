@@ -9,23 +9,32 @@ class Player():
     """ represents a player """
     MAX_ENERGY = 300
 
-    def __init__(self, position, size, headings, max_speed, team):
+    def __init__(self, position, size, headings, max_speed, team, action_energy):
         """
         position: list [x,y]
         size: tuple (width, height)
         headings: list [HeadingEnums, ...]
         max_speed: int
         team: Team enum
+        action_energy: energy required to complete 'action'
         """
         self.position = position
         self._size = size
         self.headings = headings
         self.MAX_SPEED = max_speed
         self.team = team
+        self.action_energy = action_energy
 
         self.energy = 300
         self._velocity = [0, 0]
         self.target = None
+        self.ticks_since_action = 1000
+
+    @property
+    def meets_action_requirements(self):
+        """ returns a boolean """
+        return (self.action_energy <= self.energy
+                and self.ticks_since_action > 30)
 
     @property
     def energy_bar(self):
@@ -117,6 +126,12 @@ class Player():
         """ Sets the target grid """
         self.target = grid
 
+    def action_completed(self):
+        """ reduces player energy by the amount used by an action """
+        self.energy -= self.action_energy
+        self.ticks_since_action = 0
+        self.target = None
+
     def correct_for_collision(self, player_grid, obj):
         """ corrects player's position after collision with object
             player_grid: (x,y)
@@ -145,6 +160,8 @@ class Player():
 
         self._move()
 
+        self.ticks_since_action += 1
+
 
 class Capitalist(Player):
 
@@ -154,7 +171,8 @@ class Capitalist(Player):
             size=(30, 30),
             headings=[Headings.North],
             max_speed=8,
-            team=Team.Capitalist)
+            team=Team.Capitalist,
+            action_energy=150)
 
 
 class Socialist(Player):
@@ -165,7 +183,8 @@ class Socialist(Player):
             size=(15, 15),
             headings=[Headings.South],
             max_speed=5,
-            team=Team.Socialist)
+            team=Team.Socialist,
+            action_energy=100)
 
     def killed(self):
         """ return to one of the hospitals """

@@ -18,46 +18,36 @@ class Cell_Handler():
         for _, cell in self.cells.items():
             cell.tick()
 
-    @staticmethod
-    def get_surrounding_grids(grid, include_occupied=False):
-        """ Returns a list of tuples [(x,y) ...]
-            which are the surrounding grid refs.
-            If include_occupied is True then the occupied grid is included
-            in the list.
-            """
-        surrounding_grids = []
-        for x in (-1, 0, 1):
-            for y in (-1, 0, 1):
-                if (x, y) != (0, 0) or include_occupied:
-                    surrounding_grids.append((grid[0] + x, grid[1] + y))
-        return surrounding_grids
-
-    def get_actionable_grid(self, p_grid, p_centre):
+    def get_actionable_grid(self, p_grid, p_centre, p_team):
         """ Returns the grid location of the closest actionable grid
             If there is no actionable grid in range, returns None.
             Args:
                 p_grid: player's grid
                 p_centre: position of player's centre point
+                p_team: enum
         """
         surrounding_grids = Cell_Handler.get_surrounding_grids(p_grid)
         player_x, player_y = p_centre
         min_sq_dist = 1_000_000  # any cell should be less distance away
         min_grid = None
 
+        # opposing team's cell type can be destroyed
+        opposing_type = Capitalist_Cell if p_team == Team.Socialist else Socialist_Cell
+
         # skip over surrounding grids that are not actionable
         for grid in surrounding_grids:
             candidate_cell = self.cells[grid]
-            if type(candidate_cell) is not Neutral_Cell:
-                continue
+            if (type(candidate_cell) is Neutral_Cell or
+               type(candidate_cell) is opposing_type and candidate_cell.is_destroyable):
 
-            # calculate distance between player centre and cell centre
-            cell_x, cell_y = candidate_cell.centre
-            sq_distance = (player_x - cell_x) ** 2 + (player_y - cell_y) ** 2
+                # calculate distance between player centre and cell centre
+                cell_x, cell_y = candidate_cell.centre
+                sq_distance = (player_x - cell_x) ** 2 + (player_y - cell_y) ** 2
 
-            # keep track of closest one
-            if sq_distance < min_sq_dist:
-                min_sq_dist = sq_distance
-                min_grid = grid
+                # keep track of closest one
+                if sq_distance < min_sq_dist:
+                    min_sq_dist = sq_distance
+                    min_grid = grid
 
         return min_grid
 
@@ -76,44 +66,58 @@ class Cell_Handler():
                 unnav_sur_cells.append(candidate_cell)
         return unnav_sur_cells
 
-    def action_cell(grid, player_team):
-        """ Actions a cell """
+    def action_cell(self, grid, player_team):
+        """ Actions a cell, returns True if energy is spent """
         if player_team == Team.Capitalist:
-            _capitalise_cell(grid)
+            return self._capitalise_cell(grid)
         else:  # player_team == Team.Socialist:
-            _socialise_cell(grid)
+            return self._socialise_cell(grid)
 
-    def _capitalise_cell(grid):
+    def _capitalise_cell(self, grid):
         """ capitalist player has actioned cell,
         returns True if energy was spent """
-        cell = self.cells.get(target_grid, None)
+        cell = self.cells.get(grid, None)
         if cell is None:
             return False
 
         if type(cell) is Capitalist_Cell:
             return False
         if type(cell) is Neutral_Cell:
-            cells[target_grid] = Capitalist_Cell(target_grid)
+            self.cells[grid] = Capitalist_Cell(grid)
             return True
         if type(cell) is Socialist_Cell:
-            cell.is_hindered = True
+            self.cells[grid] = Neutral_Cell(grid)
             return True
 
-    def _socialise_cell(grid):
+    def _socialise_cell(self, grid):
         """ capitalisation player has actioned cell,
         returns True if energy was spent """
-        cell = self.cells.get(target_grid, None)
+        cell = self.cells.get(grid, None)
         if cell is None:
             return False
 
         if type(cell) is Socialist_Cell:
             return False
         if type(cell) is Neutral_Cell:
-            cells[target_grid] = Socialist_Cell(target_grid)
+            self.cells[grid] = Socialist_Cell(grid)
             return True
         if type(cell) is Capitalist_Cell:
-            cell.is_hindered = True
+            self.cells[grid] = Neutral_Cell(grid)
             return True
+
+    @staticmethod
+    def get_surrounding_grids(grid, include_occupied=False):
+        """ Returns a list of tuples [(x,y) ...]
+            which are the surrounding grid refs.
+            If include_occupied is True then the occupied grid is included
+            in the list.
+            """
+        surrounding_grids = []
+        for x in (-1, 0, 1):
+            for y in (-1, 0, 1):
+                if (x, y) != (0, 0) or include_occupied:
+                    surrounding_grids.append((grid[0] + x, grid[1] + y))
+        return surrounding_grids
 
     @staticmethod
     def build_boundary(cells):
