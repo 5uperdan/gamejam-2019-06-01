@@ -123,7 +123,7 @@ def draw_score_bars(screen, capitalist_completion, socialist_completion):
 
 
 def splash_screen():
-    screen = pygame.display.set_mode((600, 600))  # , pygame.FULLSCREEN)
+    screen = pygame.display.set_mode((600, 600), pygame.FULLSCREEN)
     screen.blit(get_image('new/splash_screen.png'), (0, 0))
     pygame.display.flip()
 
@@ -133,8 +133,7 @@ def splash_screen():
                 return pygame.key.get_pressed()
 
 
-def draw_winning_team(winning_team):
-    screen = pygame.display.set_mode((600, 600))  #, pygame.FULLSCREEN)
+def draw_winning_team(winning_team, screen):
 
     myfont = pygame.font.SysFont('Comic Sans MS', 35)
     text = 'The {} state has been knocked down!'.format(
@@ -142,14 +141,14 @@ def draw_winning_team(winning_team):
     )
 
     text = myfont.render(
-        'The capitalist state has been knocked down!: ',
+        text,
         False,
         (0, 255, 0))
 
     screen.blit(text, (15, 15))
     pygame.display.flip()
 
-    time.sleep(3)
+    time.sleep(5)
 
     while True:
         for event in pygame.event.get():
@@ -172,7 +171,7 @@ def setup_joystick():
         joystick = pygame.joystick.Joystick(0)
         joystick.init()
         return joystick
-    except expression as identifier:
+    except Exception:
         pass
     return None
 
@@ -184,7 +183,7 @@ def run_game():
     clock.set_fps_limit(60)
 
     # screen parameters
-    screen = pygame.display.set_mode((640, 600))
+    screen = pygame.display.set_mode((640, 600), pygame.FULLSCREEN)
     gameplay_surface = pygame.Surface((600, 600))
 
     # create game engine
@@ -224,11 +223,8 @@ def run_game():
         if joystick is not None:
             p2_inputs = get_inputs_from_joystick(joystick)
 
-        # progress game by one tick and check for exit
+        # progress game by one tick, redraw before checking for win
         game_state = engine.tick(p1_inputs, p2_inputs)
-
-        if game_state != GameState.RUNNING:
-            return game_state
 
         # clear gameplay surface
         gameplay_surface.fill((0, 0, 0))
@@ -296,31 +292,34 @@ def run_game():
         # updates game screen
         pygame.display.flip()
 
+        if game_state != GameState.RUNNING:
+            return game_state, screen
+
     # if we've fallen out of the main game loop then quit
-    return GameState.QUIT
+    return GameState.QUIT, None
 
 
 def __main__():
     """ Entry point for application """
     initialise()
     # hold at splash screen until user input
-    pressed = splash_screen()
-
     while True:
+        pressed = splash_screen()
+
         if pressed[pygame.K_ESCAPE]:
             pygame.quit()
             return  # exit game
         if pressed[pygame.K_a]:
-            game_state = run_game()  # two player
+            game_state, screen = run_game()  # two player
         elif pressed[pygame.K_b]:
-            game_state = run_game()  # four player
+            game_state, screen = run_game()  # four player
         else:
-            game_state = run_game()  # just start the game
+            game_state, screen = run_game()  # just start the game
 
         if game_state == GameState.QUIT:
             return
         else:
-            # without clearing the screen buffer, draw the winning team
-            pressed = draw_winning_team(game_state)
+            # draw the winning team
+            pressed = draw_winning_team(game_state, screen)
 
 __main__()
