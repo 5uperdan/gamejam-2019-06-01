@@ -154,7 +154,7 @@ class Player():
     def tick(self, inputs):
         """ Processes one tick for the player """
         if self.energy < Player.MAX_ENERGY:
-            self.energy += 1
+            self.energy += 0.7
 
         self._handle_movement_inputs(inputs)
 
@@ -170,7 +170,7 @@ class Capitalist(Player):
             position,
             size=(30, 30),
             headings=[Headings.North],
-            max_speed=5,
+            max_speed=4,
             team=Team.Capitalist,
             action_energy=150)
 
@@ -182,9 +182,9 @@ class Socialist(Player):
             position,
             size=(15, 15),
             headings=[Headings.South],
-            max_speed=3,
+            max_speed=2.5,
             team=Team.Socialist,
-            action_energy=100)
+            action_energy=120)
 
     def killed(self):
         """ return to one of the hospitals """

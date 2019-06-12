@@ -206,13 +206,14 @@ def run_game():
         elif melody_tick_count >= 2300:
             melody_tick_count = 0
         tune.tick()
-        print(clock.tick())
+        clock.tick()
 
         # clear event queue and check for exit
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
     
+        # handle inputs
         pressed = pygame.key.get_pressed()
 
         if pressed[pygame.K_ESCAPE]:
@@ -223,6 +224,7 @@ def run_game():
         if joystick is not None:
             p2_inputs = get_inputs_from_joystick(joystick)
 
+        # progress game by one tick and check for exit
         game_state = engine.tick(p1_inputs, p2_inputs)
 
         if game_state != GameState.RUNNING:
@@ -255,14 +257,14 @@ def run_game():
             gameplay_surface.blit(get_image('new/car.png'), capitalist.position)
             pygame.draw.rect(
                 gameplay_surface,
-                GREEN,
+                GREEN if capitalist.meets_action_requirements else RED,
                 (capitalist.position, (30 * capitalist.energy_bar, 5)))
 
             if capitalist.target is not None:
                 targetted_cell = engine.cell_handler.cells[capitalist.target]
                 pygame.draw.rect(
                     gameplay_surface,
-                    GREEN,
+                    BLUE,
                     (targetted_cell.position, (60, 60)),
                     3)  # width of line
                 
@@ -271,7 +273,7 @@ def run_game():
             gameplay_surface.blit(get_image('bike_down_1.png'), socialist.position)
             pygame.draw.rect(
                 gameplay_surface,
-                GREEN,
+                GREEN if socialist.meets_action_requirements else RED,
                 (socialist.position, (30 * socialist.energy_bar, 5)))
 
             if socialist.target is not None:

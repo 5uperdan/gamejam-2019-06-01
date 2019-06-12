@@ -6,8 +6,6 @@ This is a game made at a gamejam.
 
 ### Must haves
 
-- fix bike spawn to safe place
-- completed buildings must add to score
 - colour the player's energy bar to indicate whether the player has enough energy to complete and action.
 - constructions fade in based on progress
 - keep win screen for longer
