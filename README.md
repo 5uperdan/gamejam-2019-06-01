@@ -6,7 +6,6 @@ This is a game made at a gamejam.
 
 ### Must haves
 
-- colour the player's energy bar to indicate whether the player has enough energy to complete and action.
 - constructions fade in based on progress
 - keep win screen for longer
 - fix sound so it repeats

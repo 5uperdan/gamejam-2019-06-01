@@ -94,7 +94,7 @@ tune_alt1.speed = tune_alt2.speed = 5.0
 def draw_progress_bar(screen, cell):
     if cell.is_complete:
         colour = GREEN
-    elif cell.is_hindered:
+    elif cell.is_destroyable:
         colour = RED
     else:  # regular
         colour = ORANGE
