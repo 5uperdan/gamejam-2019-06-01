@@ -166,11 +166,22 @@ def initialise():
     pygame.mouse.set_visible(0)
 
 
+def setup_joystick():
+    """ returns a joystick if one has been successfully initialised """
+    try:
+        joystick = pygame.joystick.Joystick(0)
+        joystick.init()
+        return joystick
+    except expression as identifier:
+        pass
+    return None
+
+
 def run_game():
     """ Plays a single instance of the game, returns the winning team """
     # setup fps limit
     clock = pyglet.clock.Clock()
-    clock.set_fps_limit(30)
+    clock.set_fps_limit(60)
 
     # screen parameters
     screen = pygame.display.set_mode((640, 600))
@@ -178,6 +189,8 @@ def run_game():
 
     # create game engine
     engine = Engine()
+
+    joystick = setup_joystick()
 
     melody_tick_count = 0
     running = True
@@ -206,6 +219,11 @@ def run_game():
             running = False
 
         p1_inputs, p2_inputs = get_inputs(pressed)
+
+        buttons = joystick.get_numbuttons()
+
+        hats = joystick.get_numhats()
+        print("Number of hats: {}".format(hats))
 
         game_state = engine.tick(p1_inputs, p2_inputs)
 
@@ -264,7 +282,7 @@ def run_game():
                     gameplay_surface,
                     RED,
                     (targetted_cell.position, (60, 60)),
-                    3)  # width of line
+                    2)  # width of line
 
         # add gameplay surface to screen
         screen.blit(gameplay_surface, (20, 0))

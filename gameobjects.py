@@ -78,7 +78,7 @@ class Captured_Cell(Cell):
         if self.is_complete:
             return False
 
-        self._progress += 1
+        self._progress += 0.5
 
         if self._progress >= self.goal:
             self._progress = self.goal

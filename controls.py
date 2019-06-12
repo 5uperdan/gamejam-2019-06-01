@@ -28,3 +28,12 @@ def get_inputs(pressed):
         p2_inputs.append(Inputs.ACTION)
 
     return p1_inputs, p2_inputs
+
+def get_inputs_from_joystick(joystick):
+    """ converts joystick inputs into game inputs """
+    inputs = []
+
+    if joystick.get_button(1):
+        inputs.append(Inputs.ACTION)
+
+    return inputs

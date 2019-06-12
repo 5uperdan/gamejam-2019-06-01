@@ -99,7 +99,7 @@ class Cell_Handler():
             return True
 
     def _socialise_cell(self, grid):
-        """ capitalisation player has actioned cell,
+        """ socialist player has actioned cell,
         returns True if energy was spent """
         cell = self.cells.get(grid, None)
         if cell is None:
@@ -144,10 +144,11 @@ class Cell_Handler():
     @staticmethod
     def load_test_level(cells):
         """ fills dictionary with cells """
-        for grid in [(0, 0), (6, 6)]:
+        for grid in [(0, 0)]:
             cells[grid] = Socialist_Cell(grid)
-        for grid in [(9, 5), (2, 8)]:
-            cells[grid] = Capitalist_Cell(grid)
+            cells[grid].is_complete = True
+        #for grid in [(9, 5), (2, 8)]:
+        #    cells[grid] = Capitalist_Cell(grid)
         for grid in [(5,2),(5,3),(7,3),(2,4),(4,5),(3,6),(4,6),(3,7),(4,7),(9,8),(0,9)]:
             cells[grid] = Rock_Cell(grid)
         for grid in [(1, 0), (5, 0), (7, 0),
