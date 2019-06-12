@@ -188,4 +188,4 @@ class Socialist(Player):
 
     def killed(self):
         """ return to one of the hospitals """
-        self.position = choice([[10, 10], [50, 50], [80, 80]])
+        self.position = [15, 15]

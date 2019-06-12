@@ -7,7 +7,7 @@ import pygame
 import pyglet
 from engine import Engine, GameState
 from sound import Tune
-from controls import get_inputs
+from controls import get_inputs, get_inputs_from_joystick
 from gameobjects import Road_Cell, Rock_Cell, Capitalist_Cell, Socialist_Cell, Neutral_Cell
 from pygame.mixer import Sound, get_init, pre_init
 import time
@@ -220,10 +220,8 @@ def run_game():
 
         p1_inputs, p2_inputs = get_inputs(pressed)
 
-        buttons = joystick.get_numbuttons()
-
-        hats = joystick.get_numhats()
-        print("Number of hats: {}".format(hats))
+        if joystick is not None:
+            p2_inputs = get_inputs_from_joystick(joystick)
 
         game_state = engine.tick(p1_inputs, p2_inputs)
 
