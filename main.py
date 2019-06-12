@@ -206,7 +206,7 @@ def run_game():
         elif melody_tick_count >= 2300:
             melody_tick_count = 0
         tune.tick()
-        clock.tick()
+        print(clock.tick())
 
         # clear event queue and check for exit
         for event in pygame.event.get():

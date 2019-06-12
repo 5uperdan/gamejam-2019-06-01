@@ -36,4 +36,14 @@ def get_inputs_from_joystick(joystick):
     if joystick.get_button(1):
         inputs.append(Inputs.ACTION)
 
+    if joystick.get_axis(0) < 0:
+        inputs.append(Inputs.LEFT)
+    elif joystick.get_axis(0) > 0:
+        inputs.append(Inputs.RIGHT)
+    
+    if joystick.get_axis(1) < 0:
+        inputs.append(Inputs.UP)
+    elif joystick.get_axis(1) > 0:
+        inputs.append(Inputs.DOWN)
+
     return inputs
