@@ -14,7 +14,6 @@ This is a game made at a gamejam.
 
 ### Nice to have
 
-- fix collision detection across multiple cells
 - building start sound
 - building destroy sound
 - sound to reflect gameplay state if possible
