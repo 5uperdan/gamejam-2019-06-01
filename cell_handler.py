@@ -2,7 +2,7 @@
 
 from gameobjects import (Capitalist_Cell, Captured_Cell, Road_Cell,
                          Socialist_Cell, Neutral_Cell, Rock_Cell, Cell)
-from game_enums import Team
+from game_enums import Team, Headings
 
 
 class Cell_Handler():
@@ -60,21 +60,6 @@ class Cell_Handler():
 
         return min_grid
 
-    def get_surrounding_unnavigable_cells(self, grid, player_team):
-        """ returns a list of cells surrounding the grid
-            and are unnavigable
-            grid: tuple
-            player_team: Team(Enum)
-        """
-        surrounding_grids = Cell_Handler.get_surrounding_grids(grid)
-        unnav_sur_cells = []
-        for grid in surrounding_grids:
-            candidate_cell = self.cells[grid]
-
-            if not candidate_cell.is_navigable(player_team):
-                unnav_sur_cells.append(candidate_cell)
-        return unnav_sur_cells
-
     def action_cell(self, grid, player_team):
         """ Actions a cell, returns True if energy is spent """
         if player_team == Team.Capitalist:
@@ -121,12 +106,53 @@ class Cell_Handler():
             If include_occupied is True then the occupied grid is included
             in the list.
             """
-        surrounding_grids = []
-        for x in (-1, 0, 1):
-            for y in (-1, 0, 1):
-                if (x, y) != (0, 0) or include_occupied:
-                    surrounding_grids.append((grid[0] + x, grid[1] + y))
+        surrounding_grids = Cell_Handler.get_adjacent_grids(grid)
+        surrounding_grids += Cell_Handler.get_diagonal_grids(grid)
+        if include_occupied:
+            surrounding_grids.append(grid)
         return surrounding_grids
+
+    @staticmethod
+    def get_adjacent_grids(grid):
+        """ Returns a list of tuples [(x,y) ...]
+            which are the adjacent grid refs.
+        """
+        return [
+            Cell_Handler.grid_navigation(grid, [Headings.North]),
+            Cell_Handler.grid_navigation(grid, [Headings.East]),
+            Cell_Handler.grid_navigation(grid, [Headings.South]),
+            Cell_Handler.grid_navigation(grid, [Headings.West])
+            ]
+
+    @staticmethod
+    def get_diagonal_grids(grid):
+        """ Returns a list of tuples [(x,y) ...]
+            which are the diagonal grid refs.
+        """
+        return [
+            Cell_Handler.grid_navigation(grid, [Headings.North, Headings.East]),
+            Cell_Handler.grid_navigation(grid, [Headings.South, Headings.East]),
+            Cell_Handler.grid_navigation(grid, [Headings.South, Headings.West]),
+            Cell_Handler.grid_navigation(grid, [Headings.North, Headings.West])
+            ]
+
+    @staticmethod
+    def grid_navigation(grid, headings):
+        """ returns a grid reference after navigating according to the
+            headings list, a list of Enums.
+        """
+        x, y = grid
+        if Headings.North in headings:
+            y -= 1
+        if Headings.East in headings:
+            x += 1
+        if Headings.South in headings:
+            y += 1
+        if Headings.West in headings:
+            x -= 1
+
+        return x, y
+
 
     @staticmethod
     def build_boundary(cells):

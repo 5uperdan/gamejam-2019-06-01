@@ -41,12 +41,13 @@ class Engine():
         self.cell_handler.tick(self.scores)
 
         # collisions between players and environment
+        # we handle and correct for adjacent cells first because it usually gets
+        # the desired effect without getting 'caught' on multiple blocks
         for player, p_grid in zip(self.players, starting_player_grids):
-            unnav_sur_cells = self.cell_handler.get_surrounding_unnavigable_cells(
-                p_grid, player.team)
-            for cell in unnav_sur_cells:
-                if player.rect.colliderect(cell.rect):
-                    player.correct_for_collision(p_grid, cell)
+            adjacent_grids = Cell_Handler.get_adjacent_grids(p_grid)
+            self.handle_environment_collisions(adjacent_grids, player, p_grid, player.team)
+            diagonal_grids = Cell_Handler.get_diagonal_grids(p_grid)
+            self.handle_environment_collisions(diagonal_grids, player, p_grid, player.team)
 
         # collisions between opposing players
         for socialist in self.socialists:
@@ -75,6 +76,15 @@ class Engine():
             return GameState.SOCIALIST_WIN
 
         return GameState.RUNNING
+
+    def handle_environment_collisions(self, grids, player, p_starting_grid, p_team):
+        """ handles environment collisions with a list of given grids """
+        for grid in grids:
+            cell = self.cell_handler.cells.get(grid, None)
+            if cell is None or cell.is_navigable(p_team):
+                continue
+            elif player.rect.colliderect(cell.rect):
+                player.correct_for_collision(p_starting_grid, cell)
 
     def get_score_completion(self, team):
         """ """
