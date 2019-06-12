@@ -7,7 +7,7 @@ from game_enums import GameState, Inputs, Team
 class Engine():
     """ Main game engine """
 
-    WINNING_SCORE = 5000
+    WINNING_SCORE = 10000
 
     def __init__(self):
         """ Setup game engine """
