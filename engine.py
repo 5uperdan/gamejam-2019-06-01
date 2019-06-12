@@ -7,6 +7,8 @@ from game_enums import GameState, Inputs, Team
 class Engine():
     """ Main game engine """
 
+    WINNING_SCORE = 5000
+
     def __init__(self):
         """ Setup game engine """
         self.cell_handler = Cell_Handler()
@@ -36,7 +38,7 @@ class Engine():
             player.tick(inputs)
 
         # apply tick to cells in gameplay area
-        self.cell_handler.tick()
+        self.cell_handler.tick(self.scores)
 
         # collisions between players and environment
         for player, p_grid in zip(self.players, starting_player_grids):
@@ -67,9 +69,13 @@ class Engine():
             player.set_target(target)
 
         # check for win conditions
-        if self.scores[Team.Capitalist] >= 1000:
+        if self.scores[Team.Capitalist] >= Engine.WINNING_SCORE:
             return GameState.CAPITALIST_WIN
-        elif self.scores[Team.Socialist] >= 1000:
+        elif self.scores[Team.Socialist] >= Engine.WINNING_SCORE:
             return GameState.SOCIALIST_WIN
 
         return GameState.RUNNING
+
+    def get_score_completion(self, team):
+        """ """
+        return self.scores[team] / Engine.WINNING_SCORE

@@ -14,9 +14,18 @@ class Cell_Handler():
         Cell_Handler.load_test_level(self.cells)
         Cell_Handler.build_boundary(self.cells)
 
-    def tick(self):
+    def tick(self, scores):
+        """ 
+        Args:
+            scores: score dictionary
+        """
         for _, cell in self.cells.items():
-            cell.tick()
+            completed = cell.tick()
+            if completed:
+                if type(cell) is Capitalist_Cell:
+                    scores[Team.Capitalist] += 1000
+                elif type(cell) is Socialist_Cell:
+                    scores[Team.Socialist] += 1000
 
     def get_actionable_grid(self, p_grid, p_centre, p_team):
         """ Returns the grid location of the closest actionable grid

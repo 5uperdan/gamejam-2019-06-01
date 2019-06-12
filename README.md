@@ -6,7 +6,6 @@ This is a game made at a gamejam.
 
 ### Must haves
 
-- score bars
 - start with completed socialist square so they have a safe point
 - fix bike spawn to safe place
 - completed buildings must add to score

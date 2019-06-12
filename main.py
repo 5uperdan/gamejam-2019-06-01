@@ -34,6 +34,7 @@ def get_image(path):
 RED = (255, 0, 0)
 ORANGE = (255, 165, 0)
 GREEN = (0, 255, 100)
+BLUE = (0, 0, 255)
 
 tune = Tune()
 tune.sequence_a = ['c1n','d1n','c1n','e1n','e1n','d1n','c1n',
@@ -104,6 +105,23 @@ def draw_progress_bar(screen, cell):
         (cell.position, (60 * cell.progress, 5)))
 
 
+def draw_score_bars(screen, capitalist_completion, socialist_completion):
+    """ draws score bars on the edges of the screen
+        Args:
+            capitalist_completion: decimal 0-1
+            socialist_completion: decimal 0-1
+    """
+    pygame.draw.rect(
+        screen,
+        RED,
+        ((0, 600), (20, -600 * socialist_completion)))
+
+    pygame.draw.rect(
+        screen,
+        BLUE,
+        ((620, 600), (20, - 600 * capitalist_completion)))
+
+
 def splash_screen():
     screen = pygame.display.set_mode((600, 600))  # , pygame.FULLSCREEN)
     screen.blit(get_image('new/splash_screen.png'), (0, 0))
@@ -131,6 +149,8 @@ def draw_winning_team(winning_team):
     screen.blit(text, (15, 15))
     pygame.display.flip()
 
+    time.sleep(3)
+
     while True:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
@@ -153,7 +173,7 @@ def run_game():
     clock.set_fps_limit(30)
 
     # screen parameters
-    screen = pygame.display.set_mode((640, 640))
+    screen = pygame.display.set_mode((640, 600))
     gameplay_surface = pygame.Surface((600, 600))
 
     # create game engine
@@ -246,11 +266,14 @@ def run_game():
                     (targetted_cell.position, (60, 60)),
                     3)  # width of line
 
-
-        # draw scores
-
         # add gameplay surface to screen
-        screen.blit(gameplay_surface, (20, 20))
+        screen.blit(gameplay_surface, (20, 0))
+
+        # draw score bars outside gameplay surface
+        draw_score_bars(
+            screen,
+            engine.get_score_completion(Team.Capitalist),
+            engine.get_score_completion(Team.Socialist))
 
         # updates game screen
         pygame.display.flip()
