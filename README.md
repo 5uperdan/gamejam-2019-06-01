@@ -7,15 +7,13 @@ This is a game made at a gamejam.
 ### Must haves
 
 - constructions fade in based on progress
-- keep win screen for longer
 - fix sound so it repeats
 - a larger bike (art)
-- a factory (art)
-- a park (art)
+- a factory (art, with a few transparancy levels)
+- a park (art, with a few transparancy levels)
 
 ### Nice to have
 
-- controller support
 - fix collision detection across multiple cells
 - building start sound
 - building destroy sound

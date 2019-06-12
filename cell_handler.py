@@ -146,7 +146,7 @@ class Cell_Handler():
         """ fills dictionary with cells """
         for grid in [(0, 0)]:
             cells[grid] = Socialist_Cell(grid)
-            cells[grid].is_complete = True
+            Cell_Handler.make_cell_socialist_respawner(cells[grid])
         #for grid in [(9, 5), (2, 8)]:
         #    cells[grid] = Capitalist_Cell(grid)
         for grid in [(5,2),(5,3),(7,3),(2,4),(4,5),(3,6),(4,6),(3,7),(4,7),(9,8),(0,9)]:
@@ -169,3 +169,9 @@ class Cell_Handler():
                 for y in range(10):
                     if (x, y) not in cells:
                         cells[(x, y)] = Neutral_Cell((x, y))
+
+    @staticmethod
+    def make_cell_socialist_respawner(cell):
+        """ give the cell the properties of a socialist respawning cell """
+        cell.is_complete = True
+        cell._progress = cell.goal
