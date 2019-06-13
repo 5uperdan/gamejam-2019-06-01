@@ -200,9 +200,9 @@ def run_game():
         # playing the background melody in two keys
         if melody_tick_count == 1:
             tune.play('a')
-        elif melody_tick_count == 1150:
+        elif melody_tick_count == 760:
             tune.play('b')
-        elif melody_tick_count >= 2300:
+        elif melody_tick_count >= 1520:
             melody_tick_count = 0
         tune.tick()
         clock.tick()
