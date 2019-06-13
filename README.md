@@ -8,7 +8,31 @@ On day 1 we started with a blank py file. All of the code for the game can be co
 
 ## How to play
 
+ESC will exit the game after the splash screen.
 
+Socialist player controls:
+
+Arrow keys to move and right ctrl is the action button.
+
+Capitalist player controls:
+
+WASD to move and left ctrl is the action button.
+
+-------
+
+The winner of the game is the player to fill their score bar first (socialist's is red on the left, capitalists is blue on the right). Fill your score bar by completing constructions for your team (parks for socialists, factories for capitalists).
+
+Each player has an energy bar. When the energy bar is green, you have enough energy to complete an action. A player's target cell is highlighted in red for socialists and blue for capitalists.
+
+Using the action button while you have a blank cell selected will begin a construction for your team on that cell. (Construction progress bar is shown in green)
+
+Using the action button while you have an enemy's construction selected will begin reversing the progress of the construction. (Construction progress bar will turn red).
+
+Using the action button on one of your own constructions whose progress is reversing will return the construction to a normal progressing state.
+
+All actions use the same amount of energy.
+
+The socialist cyclist moves slower than the capitalist driver but their buildings are constructed faster and the socialist is able to cycle through their own parks. The capitalists buildings are constructed slower but they gain score for running over the cyclist.
 
 ## Get the game
 
