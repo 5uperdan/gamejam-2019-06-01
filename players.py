@@ -172,7 +172,7 @@ class Capitalist(Player):
             headings=[Headings.North],
             max_speed=4,
             team=Team.Capitalist,
-            action_energy=120)
+            action_energy=130)
 
 
 class Socialist(Player):
