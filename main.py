@@ -270,7 +270,7 @@ def run_game():
             pygame.draw.rect(
                 gameplay_surface,
                 GREEN if socialist.meets_action_requirements else RED,
-                (socialist.position, (30 * socialist.energy_bar, 5)))
+                ((socialist.position[0] - 7, socialist.position[1] - 7), (30 * socialist.energy_bar, 5)))
 
             if socialist.target is not None:
                 targetted_cell = engine.cell_handler.cells[socialist.target]

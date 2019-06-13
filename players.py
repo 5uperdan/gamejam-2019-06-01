@@ -154,7 +154,7 @@ class Player():
     def tick(self, inputs):
         """ Processes one tick for the player """
         if self.energy < Player.MAX_ENERGY:
-            self.energy += 0.7
+            self.energy += 1
 
         self._handle_movement_inputs(inputs)
 
@@ -172,7 +172,7 @@ class Capitalist(Player):
             headings=[Headings.North],
             max_speed=4,
             team=Team.Capitalist,
-            action_energy=100)
+            action_energy=120)
 
 
 class Socialist(Player):
