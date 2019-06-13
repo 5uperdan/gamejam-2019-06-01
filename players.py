@@ -25,7 +25,7 @@ class Player():
         self.team = team
         self.action_energy = action_energy
 
-        self.energy = 300
+        self.energy = Player.MAX_ENERGY
         self._velocity = [0, 0]
         self.target = None
         self.ticks_since_action = 1000
@@ -172,7 +172,7 @@ class Capitalist(Player):
             headings=[Headings.North],
             max_speed=4,
             team=Team.Capitalist,
-            action_energy=130)
+            action_energy=120)
 
 
 class Socialist(Player):
