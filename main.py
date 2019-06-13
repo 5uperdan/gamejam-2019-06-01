@@ -102,7 +102,7 @@ def draw_progress_bar(screen, cell):
     pygame.draw.rect(
         screen,
         colour,
-        (cell.position, (60 * cell.progress, 5)))
+        (cell.position, (60 * cell.progress, 3)))
 
 
 def draw_score_bars(screen, capitalist_completion, socialist_completion):
@@ -235,13 +235,13 @@ def run_game():
                 gameplay_surface.blit(get_image('new/road_blank.png'), cell.position)
             elif type(cell) is Rock_Cell:
                 gameplay_surface.blit(get_image('new/road_blank.png'), cell.position)
-                gameplay_surface.blit(get_image('new/rock.png'), cell.position)
+                gameplay_surface.blit(get_image('danny/noentry.png'), cell.position)
             elif type(cell) is Capitalist_Cell:
                 gameplay_surface.blit(get_image('new/neutral.png'), cell.position)
-                gameplay_surface.blit(get_image('new/office.png'), cell.position)
+                gameplay_surface.blit(get_image('danny/factory.png'), cell.position)
                 draw_progress_bar(gameplay_surface, cell)
             elif type(cell) is Socialist_Cell:
-                gameplay_surface.blit(get_image('new/park-lake.png'), cell.position)
+                gameplay_surface.blit(get_image('danny/park.png'), cell.position)
                 draw_progress_bar(gameplay_surface, cell)
             elif type(cell) is Neutral_Cell:
                 gameplay_surface.blit(get_image('new/neutral.png'), cell.position)
