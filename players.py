@@ -154,7 +154,7 @@ class Player():
     def tick(self, inputs):
         """ Processes one tick for the player """
         if self.energy < Player.MAX_ENERGY:
-            self.energy += 1
+            self.energy += 0.85
 
         self._handle_movement_inputs(inputs)
 

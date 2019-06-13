@@ -250,11 +250,11 @@ def run_game():
 
         # draw players, action highlights & energy meters
         for capitalist in engine.capitalists:
-            gameplay_surface.blit(get_image('new/car.png'), capitalist.position)
+            gameplay_surface.blit(get_image('car_up.png'), capitalist.position)
             pygame.draw.rect(
                 gameplay_surface,
                 GREEN if capitalist.meets_action_requirements else RED,
-                (capitalist.position, (30 * capitalist.energy_bar, 5)))
+                ((capitalist.position[0], capitalist.position[1] - 8), (30 * capitalist.energy_bar, 5)))
 
             if capitalist.target is not None:
                 targetted_cell = engine.cell_handler.cells[capitalist.target]
@@ -266,7 +266,7 @@ def run_game():
 
 
         for socialist in engine.socialists:
-            gameplay_surface.blit(get_image('bike_down_1.png'), socialist.position)
+            gameplay_surface.blit(get_image('danny/bike.png'), socialist.position)
             pygame.draw.rect(
                 gameplay_surface,
                 GREEN if socialist.meets_action_requirements else RED,
