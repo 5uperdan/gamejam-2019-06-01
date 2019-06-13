@@ -24,6 +24,12 @@ class Headings(Enum):
 
 
 class Team(Enum):
-    Capitalist = 0,
+    Capitalist = 0
     Socialist = 1
     Neutral = 2
+
+
+class Cell_Tick_Return(Enum):
+    Completed = 1
+    Destroyed = 2
+    Other = 3

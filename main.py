@@ -93,16 +93,16 @@ tune_alt1.speed = tune_alt2.speed = 5.0
 
 def draw_progress_bar(screen, cell):
     if cell.is_complete:
-        colour = GREEN
-    elif cell.is_destroyable:
+        return
+    elif cell.is_hindered:
         colour = RED
     else:  # regular
-        colour = ORANGE
+        colour = GREEN
 
     pygame.draw.rect(
         screen,
         colour,
-        (cell.position, (60 * cell.progress, 3)))
+        (cell.position, (60 * cell.progress, 4)))
 
 
 def draw_score_bars(screen, capitalist_completion, socialist_completion):
@@ -263,8 +263,8 @@ def run_game():
                     BLUE,
                     (targetted_cell.position, (60, 60)),
                     3)  # width of line
-                
-        
+
+
         for socialist in engine.socialists:
             gameplay_surface.blit(get_image('bike_down_1.png'), socialist.position)
             pygame.draw.rect(

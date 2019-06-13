@@ -2,7 +2,7 @@
 
 from gameobjects import (Capitalist_Cell, Captured_Cell, Road_Cell,
                          Socialist_Cell, Neutral_Cell, Rock_Cell, Cell)
-from game_enums import Team, Headings
+from game_enums import Team, Headings, Cell_Tick_Return
 
 
 class Cell_Handler():
@@ -20,12 +20,14 @@ class Cell_Handler():
             scores: score dictionary
         """
         for _, cell in self.cells.items():
-            completed = cell.tick()
-            if completed:
+            cell_tick_rtrn = cell.tick()
+            if cell_tick_rtrn == Cell_Tick_Return.Completed:
                 if type(cell) is Capitalist_Cell:
                     scores[Team.Capitalist] += 1000
                 elif type(cell) is Socialist_Cell:
                     scores[Team.Socialist] += 1000
+            elif cell_tick_rtrn == Cell_Tick_Return.Destroyed:
+                self.cells[cell.grid] = Neutral_Cell(cell.grid)
 
     def get_actionable_grid(self, p_grid, p_centre, p_team):
         """ Returns the grid location of the closest actionable grid
@@ -40,14 +42,20 @@ class Cell_Handler():
         min_sq_dist = 1_000_000  # any cell should be less distance away
         min_grid = None
 
-        # opposing team's cell type can be destroyed
+        # opposing team's cell type can be hindered, your own may need repair
         opposing_type = Capitalist_Cell if p_team == Team.Socialist else Socialist_Cell
+        friendly_type = Capitalist_Cell if p_team == Team.Capitalist else Socialist_Cell
 
-        # skip over surrounding grids that are not actionable
+        # select grids which are actionable
         for grid in surrounding_grids:
             candidate_cell = self.cells[grid]
+
+            if candidate_cell.is_complete:
+                continue
+
             if (type(candidate_cell) is Neutral_Cell or
-               type(candidate_cell) is opposing_type and candidate_cell.is_destroyable):
+               (type(candidate_cell) is opposing_type and not candidate_cell.is_hindered) or
+               type(candidate_cell) is friendly_type and candidate_cell.is_hindered):
 
                 # calculate distance between player centre and cell centre
                 cell_x, cell_y = candidate_cell.centre
@@ -75,12 +83,13 @@ class Cell_Handler():
             return False
 
         if type(cell) is Capitalist_Cell:
-            return False
+            self.cells[grid].is_hindered = False
+            return True
         if type(cell) is Neutral_Cell:
             self.cells[grid] = Capitalist_Cell(grid)
             return True
         if type(cell) is Socialist_Cell:
-            self.cells[grid] = Neutral_Cell(grid)
+            self.cells[grid].is_hindered = True
             return True
 
     def _socialise_cell(self, grid):
@@ -91,12 +100,13 @@ class Cell_Handler():
             return False
 
         if type(cell) is Socialist_Cell:
-            return False
+            self.cells[grid].is_hindered = False
+            return True
         if type(cell) is Neutral_Cell:
             self.cells[grid] = Socialist_Cell(grid)
             return True
         if type(cell) is Capitalist_Cell:
-            self.cells[grid] = Neutral_Cell(grid)
+            self.cells[grid].is_hindered = True
             return True
 
     @staticmethod
@@ -199,5 +209,5 @@ class Cell_Handler():
     @staticmethod
     def make_cell_socialist_respawner(cell):
         """ give the cell the properties of a socialist respawning cell """
-        cell.is_complete = True
+        cell._is_complete = True
         cell._progress = cell.goal

@@ -172,7 +172,7 @@ class Capitalist(Player):
             headings=[Headings.North],
             max_speed=4,
             team=Team.Capitalist,
-            action_energy=150)
+            action_energy=100)
 
 
 class Socialist(Player):
@@ -184,7 +184,7 @@ class Socialist(Player):
             headings=[Headings.South],
             max_speed=2.5,
             team=Team.Socialist,
-            action_energy=120)
+            action_energy=100)
 
     def killed(self):
         """ return to one of the hospitals """

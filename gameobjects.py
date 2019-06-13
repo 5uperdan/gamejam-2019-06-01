@@ -1,7 +1,7 @@
 """ Our game objects """
 from pygame import Rect
 import math
-from game_enums import Team
+from game_enums import Team, Cell_Tick_Return
 
 
 class Cell():
@@ -19,6 +19,10 @@ class Cell():
         """ returns centre position """
         return (self.position[0] + self._size[0] // 2,
                 self.position[1] + self._size[1] // 2)
+
+    @property
+    def is_complete(self):
+        return False
 
     def is_navigable(self, player_team):
         return False
@@ -55,10 +59,14 @@ class Captured_Cell(Cell):
     def __init__(self, grid, goal):
         self._progress = 0
         self.goal = goal
-        self.is_complete = False
+        self._is_complete = False
         self.is_hindered = False
 
         super().__init__(grid)
+
+    @property
+    def is_complete(self):
+        return self._is_complete
 
     @property
     def is_destroyable(self):
@@ -76,15 +84,22 @@ class Captured_Cell(Cell):
     def tick(self):
         """ returns True if type complete """
         if self.is_complete:
-            return False
+            return Cell_Tick_Return.Other
 
-        self._progress += 0.5
+        if self.is_hindered:
+            self._progress -= 0.5
+        else:
+            self._progress += 0.5
 
         if self._progress >= self.goal:
             self._progress = self.goal
-            self.is_complete = True
-            return True
-        return False
+            self._is_complete = True
+            return Cell_Tick_Return.Completed
+
+        if self._progress <= 0:
+            return Cell_Tick_Return.Destroyed
+
+        return Cell_Tick_Return.Other
 
 
 class Capitalist_Cell(Captured_Cell):
